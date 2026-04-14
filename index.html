@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Finanzas">
+<title>Estrategia Financiera · Erianny</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0D0F14;
+  --surface: #161820;
+  --surface2: #1E2028;
+  --surface3: #262830;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #F0F0F5;
+  --text2: #9A9AAF;
+  --text3: #5A5A6E;
+  --green: #2ECC8A;
+  --green-dim: rgba(46,204,138,0.12);
+  --blue: #5B8EFF;
+  --blue-dim: rgba(91,142,255,0.12);
+  --amber: #F5A623;
+  --amber-dim: rgba(245,166,35,0.12);
+  --red: #FF5E5E;
+  --red-dim: rgba(255,94,94,0.12);
+  --purple: #A78BFA;
+  --purple-dim: rgba(167,139,250,0.12);
+  --r: 14px;
+  --r-sm: 8px;
+  --font: 'DM Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; }
+.app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+.header { padding: 16px 20px 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); flex-shrink: 0; background: var(--bg); }
+.header-left .greeting { font-size: 12px; color: var(--text3); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; }
+.header-left .name { font-size: 20px; font-weight: 600; color: var(--text); line-height: 1.2; }
+.header-right { display:flex; align-items:center; gap:8px; }
+.header-badge { background: var(--green-dim); color: var(--green); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(46,204,138,0.2); font-family: var(--mono); }
+.sync-btn { background: var(--surface2); border: 1px solid var(--border2); color: var(--text3); font-size: 11px; padding: 4px 10px; border-radius: 20px; cursor: pointer; font-family: var(--mono); transition: all .2s; }
+.sync-btn:active { transform: scale(0.95); }
+.sync-btn.syncing { color: var(--amber); border-color: var(--amber); }
+.sync-btn.ok { color: var(--green); border-color: var(--green); }
+.nav { display: flex; gap: 4px; padding: 10px 16px; overflow-x: auto; flex-shrink: 0; scrollbar-width: none; border-bottom: 1px solid var(--border); }
+.nav::-webkit-scrollbar { display: none; }
+.nav-btn { flex-shrink: 0; padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border2); background: transparent; color: var(--text2); font-size: 13px; font-family: var(--font); font-weight: 500; cursor: pointer; transition: all .2s; white-space: nowrap; }
+.nav-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+.nav-btn:active { transform: scale(0.96); }
+.content { flex: 1; overflow-y: auto; padding: 16px; scrollbar-width: thin; scrollbar-color: var(--surface3) transparent; }
+.content::-webkit-scrollbar { width: 3px; }
+.content::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+.section { display: none; animation: fadeIn .2s ease; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; }
+.kpi .k-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; margin-bottom: 6px; }
+.kpi .k-value { font-size: 22px; font-weight: 600; font-family: var(--mono); line-height: 1; }
+.kpi .k-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.kpi.green .k-value { color: var(--green); }
+.kpi.blue .k-value { color: var(--blue); }
+.kpi.amber .k-value { color: var(--amber); }
+.kpi.red .k-value { color: var(--red); }
+.kpi.purple .k-value { color: var(--purple); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 12px; }
+.card-title { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+.row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.row:last-child { border-bottom: none; padding-bottom: 0; }
+.row:first-child { padding-top: 0; }
+.row-label { font-size: 14px; color: var(--text2); }
+.row-label small { display: block; font-size: 11px; color: var(--text3); margin-top: 2px; }
+.row-value { font-size: 14px; font-weight: 600; font-family: var(--mono); color: var(--text); }
+.row-value.green { color: var(--green); }
+.row-value.red { color: var(--red); }
+.row-value.blue { color: var(--blue); }
+.row-value.amber { color: var(--amber); }
+.row-value.purple { color: var(--purple); }
+.badge { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 6px; font-family: var(--mono); }
+.badge-green { background: var(--green-dim); color: var(--green); }
+.badge-amber { background: var(--amber-dim); color: var(--amber); }
+.badge-red { background: var(--red-dim); color: var(--red); }
+.badge-blue { background: var(--blue-dim); color: var(--blue); }
+.badge-purple { background: var(--purple-dim); color: var(--purple); }
+.prog-wrap { margin-bottom: 14px; }
+.prog-wrap:last-child { margin-bottom: 0; }
+.prog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.prog-label { font-size: 13px; color: var(--text2); }
+.prog-nums { font-size: 12px; font-family: var(--mono); color: var(--text3); }
+.prog-bar { height: 6px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 3px; transition: width .8s cubic-bezier(.4,0,.2,1); }
+.flow-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--r-sm); border: 1px solid var(--border); margin-bottom: 8px; background: var(--surface2); }
+.flow-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; font-weight: 700; font-family: var(--mono); }
+.flow-body { flex: 1; min-width: 0; }
+.flow-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.flow-desc { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.flow-amount { font-size: 15px; font-weight: 600; font-family: var(--mono); flex-shrink: 0; }
+.flow-arrow { text-align: center; color: var(--text3); font-size: 18px; margin: 2px 0 6px; }
+.flow-divider { height: 1px; background: var(--border); margin: 12px 0; }
+.acc-card { border-radius: var(--r); border: 1px solid var(--border2); overflow: hidden; margin-bottom: 12px; }
+.acc-header { padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+.acc-avatar { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; font-family: var(--mono); flex-shrink: 0; }
+.acc-info .acc-name { font-size: 15px; font-weight: 600; color: var(--text); }
+.acc-info .acc-role { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.acc-body { padding: 0 16px 14px; }
+.calc-field { margin-bottom: 16px; }
+.calc-field label { display: block; font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; font-weight: 500; }
+.calc-field input[type=range] { width: 100%; -webkit-appearance: none; appearance: none; height: 4px; background: var(--surface3); border-radius: 2px; outline: none; }
+.calc-field input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--blue); border: 3px solid var(--bg); cursor: pointer; }
+.calc-field .range-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.calc-field .range-val { font-size: 20px; font-weight: 600; font-family: var(--mono); color: var(--blue); }
+.calc-result { background: var(--surface2); border-radius: var(--r-sm); padding: 16px; margin-top: 16px; border: 1px solid var(--border2); }
+.calc-result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.calc-result-item .cr-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.calc-result-item .cr-value { font-size: 18px; font-weight: 600; font-family: var(--mono); }
+.gasto-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; background: var(--surface2); border-radius: var(--r-sm); margin-bottom: 8px; border: 1px solid var(--border); }
+.gi-left .gi-desc { font-size: 14px; font-weight: 500; color: var(--text); }
+.gi-left .gi-cat { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.gi-right { display: flex; align-items: center; gap: 10px; }
+.gi-amount { font-size: 15px; font-weight: 600; font-family: var(--mono); color: var(--amber); }
+.chart-container { position: relative; width: 100%; height: 200px; margin-top: 12px; }
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px; background: var(--border2); border-radius: 1px; }
+.tl-item { position: relative; margin-bottom: 20px; }
+.tl-item:last-child { margin-bottom: 0; }
+.tl-dot { position: absolute; left: -20px; top: 4px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--bg); }
+.tl-phase { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; font-family: var(--mono); }
+.tl-period { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.tl-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.section-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin: 20px 0 10px; }
+.section-label:first-child { margin-top: 0; }
+.loading-overlay { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; gap:12px; color:var(--text3); font-size:13px; }
+.spinner { width:24px; height:24px; border:2px solid var(--surface3); border-top-color:var(--blue); border-radius:50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.error-state { background:var(--red-dim); border:1px solid rgba(255,94,94,0.2); border-radius:var(--r-sm); padding:12px 14px; font-size:13px; color:var(--red); margin-bottom:12px; }
+.live-dot { display:inline-block; width:6px; height:6px; background:var(--green); border-radius:50%; margin-right:5px; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.cat-bar-wrap { margin-bottom:10px; }
+.cat-bar-header { display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; }
+.cat-bar-label { color:var(--text2); }
+.cat-bar-val { color:var(--text); font-family:var(--mono); font-weight:600; }
+.cat-bar { height:4px; background:var(--surface3); border-radius:2px; overflow:hidden; }
+.cat-bar-fill { height:100%; border-radius:2px; }
+.safe-bottom { height: env(safe-area-inset-bottom, 0px); flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="greeting">Estrategia Financiera</div>
+      <div class="name">Erianny</div>
+    </div>
+    <div class="header-right">
+      <button class="sync-btn" id="sync-btn" onclick="syncAll()">↻ Sync</button>
+      <div class="header-badge" id="live-date"></div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav">
+    <button class="nav-btn active" onclick="show('resumen',this)">Resumen</button>
+    <button class="nav-btn" onclick="show('gastos',this)">Gastos</button>
+    <button class="nav-btn" onclick="show('flujo',this)">Flujo</button>
+    <button class="nav-btn" onclick="show('wohnung',this)">Wohnung</button>
+    <button class="nav-btn" onclick="show('metas',this)">Metas</button>
+    <button class="nav-btn" onclick="show('sparplan',this)">Sparplan</button>
+    <button class="nav-btn" onclick="show('cuentas',this)">Cuentas</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- RESUMEN -->
+    <div id="s-resumen" class="section active">
+      <div id="resumen-loading" class="loading-overlay"><div class="spinner"></div><span>Cargando datos...</span></div>
+      <div id="resumen-content" style="display:none">
+        <div class="kpi-grid">
+          <div class="kpi green"><div class="k-label">Ingreso neto</div><div class="k-value" id="r-ingreso">—</div><div class="k-sub">Este mes</div></div>
+          <div class="kpi blue"><div class="k-label">Fijos pagados</div><div class="k-value" id="r-fijos">—</div><div class="k-sub">Compromisos</div></div>
+          <div class="kpi amber"><div class="k-label">Variables</div><div class="k-value" id="r-variables">—</div><div class="k-sub">Gastado hasta hoy</div></div>
+          <div class="kpi"><div class="k-label">Monto libre</div><div class="k-value" id="r-libre">—</div><div class="k-sub">Estimado mes</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Estado de metas</div>
+          <div class="prog-wrap">
+            <div class="prog-header"><span class="prog-label">3-Zimmer Dresden</span><span class="prog-nums" id="prog-wohnung-txt">— / 2.300€</span></div>
+            <div class="prog-bar"><div class="prog-fill" id="prog-wohnung" style="width:0%;background:var(--blue)"></div></div>
+          </div>
+          <div class="prog-wrap">
+            <div class="prog-header"><span class="prog-label">Fondo Emergencia</span><span class="prog-nums" id="prog-fe-txt">— / 1.482€</span></div>
+            <div class="prog-bar"><div class="prog-fill" id="prog-fe" style="width:0%;background:var(--green)"></div></div>
+          </div>
+          <div class="prog-wrap">
+            <div class="prog-header"><span class="prog-label">Deuda Familiar (Ramón)</span><span class="prog-nums" id="prog-deuda-txt">0 / 7.450€</span></div>
+            <div class="prog-bar"><div class="prog-fill" id="prog-deuda" style="width:0%;background:var(--amber)"></div></div>
+          </div>
+          <div class="prog-wrap">
+            <div class="prog-header"><span class="prog-label">Deuda Arki</span><span class="prog-nums">777 / 777€</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--green)"></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Distribución ingreso neto</div>
+          <div class="chart-container"><canvas id="donutChart"></canvas></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+            <span class="badge badge-purple">Sparplan 100€</span>
+            <span class="badge badge-blue">3-Zimmer 357€</span>
+            <span class="badge badge-green">FE 100€</span>
+            <span class="badge badge-red">Deuda Ramón 200€</span>
+            <span class="badge" style="background:rgba(154,154,175,0.12);color:var(--text2)">Fijos ~197€</span>
+            <span class="badge badge-amber">Variables ~245€</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="live-dot"></span>Última sincronización</div>
+          <div class="row"><div class="row-label">Fuente gastos</div><div class="badge badge-green" id="sync-time-gastos">—</div></div>
+          <div class="row"><div class="row-label">Mes en curso</div><div class="row-value" id="sync-mes">—</div></div>
+          <div class="row"><div class="row-label">Arki</div><div class="badge badge-green">✅ Liquidada 4/4/2026</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Hoja de ruta</div>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--green)"></div>
+              <div class="tl-phase" style="color:var(--green)">✅ Completado</div>
+              <div class="tl-period">Mar – Abr 2026</div>
+              <div class="tl-desc">Arki liquidada · Sparplan 100€ · FE 100€ · Wohnungssparen 357€ activos</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--amber)"></div>
+              <div class="tl-phase" style="color:var(--amber)">Fase actual</div>
+              <div class="tl-period">Abr – Sep 2026</div>
+              <div class="tl-desc">Acumular 2.300€ para 3-Zimmer · Buscar activamente desde May · Deuda Ramón 200€/mes</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--blue)"></div>
+              <div class="tl-phase" style="color:var(--blue)">Meta Wohnung</div>
+              <div class="tl-period">Oct 2026</div>
+              <div class="tl-desc">3-Zimmer Löbtau/Plauen confirmado · Minijob vuelve a Sparplan → 460-500€/mes</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--purple)"></div>
+              <div class="tl-phase" style="color:var(--purple)">Largo plazo</div>
+              <div class="tl-period">2027+</div>
+              <div class="tl-desc">FE completado · Sparplan 500€/mes · Steuererklärung → devolución 600-1.200€</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GASTOS EN TIEMPO REAL -->
+    <div id="s-gastos" class="section">
+      <div id="gastos-loading" class="loading-overlay"><div class="spinner"></div><span>Cargando gastos del Sheet...</span></div>
+      <div id="gastos-content" style="display:none">
+        <div class="kpi-grid">
+          <div class="kpi amber"><div class="k-label">Variables mes</div><div class="k-value" id="g-total-variables">—</div><div class="k-sub">Gastado hasta hoy</div></div>
+          <div class="kpi blue"><div class="k-label">Fijos mes</div><div class="k-value" id="g-total-fijos">—</div><div class="k-sub">Compromisos</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Gastos variables por categoría</div>
+          <div id="cat-bars"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Gastos fijos este mes</div>
+          <div id="fijos-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Detalle gastos variables</div>
+          <div id="gastos-detalle"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLUJO -->
+    <div id="s-flujo" class="section">
+      <div class="card">
+        <div class="card-title">Día de cobro — distribución automática</div>
+        <div class="flow-item">
+          <div class="flow-icon" style="background:var(--green-dim);color:var(--green)">+</div>
+          <div class="flow-body"><div class="flow-name">Cobro sueldo + minijob</div><div class="flow-desc">Entra todo en Sparkasse · día ~25</div></div>
+          <div class="flow-amount" style="color:var(--green)" id="fl-ingreso">~2.284€</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-item">
+          <div class="flow-icon" style="background:var(--blue-dim);color:var(--blue)">W</div>
+          <div class="flow-body"><div class="flow-name">Wise — Jar 3-Zimmer Dresden</div><div class="flow-desc">Orden permanente · 100% minijob · meta 2.300€</div></div>
+          <div class="flow-amount" style="color:var(--blue)">−357€</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-icon" style="background:var(--green-dim);color:var(--green)">TR</div>
+          <div class="flow-body"><div class="flow-name">Trade Republic Tagesgeld</div><div class="flow-desc">Fondo emergencia · ~4% interés</div></div>
+          <div class="flow-amount" style="color:var(--green)">−100€</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-icon" style="background:var(--purple-dim);color:var(--purple)">SP</div>
+          <div class="flow-body"><div class="flow-name">Sparplan VWCE</div><div class="flow-desc">Automático · no tocar hasta 2035+</div></div>
+          <div class="flow-amount" style="color:var(--purple)">−100€</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-icon" style="background:var(--amber-dim);color:var(--amber)">D</div>
+          <div class="flow-body"><div class="flow-name">Deuda familiar (Ramón)</div><div class="flow-desc">Orden permanente · hasta Jun 2029</div></div>
+          <div class="flow-amount" style="color:var(--amber)">−200€</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-icon" style="background:var(--surface3);color:var(--text3)">A</div>
+          <div class="flow-body"><div class="flow-name">Deuda Arki <span class="badge badge-green" style="font-size:10px">✅ liquidada</span></div><div class="flow-desc">Pagada 4 abril 2026</div></div>
+          <div class="flow-amount" style="color:var(--green)">0€</div>
+        </div>
+        <div class="flow-divider"></div>
+        <div class="flow-item" style="background:var(--surface3);border-color:var(--border2)">
+          <div class="flow-icon" style="background:var(--border);color:var(--text2)">=</div>
+          <div class="flow-body"><div class="flow-name">Resto en Sparkasse</div><div class="flow-desc">Gastos fijos restantes + variables del mes</div></div>
+          <div class="flow-amount" id="fl-resto">~1.006€</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Post-mudanza Oct 2026+</div>
+        <div class="row"><div class="row-label">Sparplan sube</div><div class="row-value green">460-500€/mes</div></div>
+        <div class="row"><div class="row-label">Minijob → inversión</div><div class="row-value green">357€ liberados</div></div>
+        <div class="row"><div class="row-label">Nuevo alquiler (50%)</div><div class="row-value">465€/mes</div></div>
+        <div class="row"><div class="row-label">Deutschlandticket VVO</div><div class="row-value">58€/mes</div></div>
+      </div>
+    </div>
+
+    <!-- WOHNUNG -->
+    <div id="s-wohnung" class="section">
+      <div class="kpi-grid">
+        <div class="kpi blue"><div class="k-label">Tu Warmmiete</div><div class="k-value">465€</div><div class="k-sub">50% · 3-Zimmer Löbtau</div></div>
+        <div class="kpi amber"><div class="k-label">Meta entrada</div><div class="k-value">2.300€</div><div class="k-sub">Kaution + mudanza</div></div>
+        <div class="kpi green"><div class="k-label">Ahorro acum.</div><div class="k-value" id="woh-acum">—</div><div class="k-sub">Wise Jar</div></div>
+        <div class="kpi"><div class="k-label">Plazo</div><div class="k-value">Oct 26</div><div class="k-sub">7 meses</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Progreso ahorro</div>
+        <div class="prog-wrap">
+          <div class="prog-header"><span class="prog-label">3-Zimmer Dresden</span><span class="prog-nums" id="woh-prog-txt">— / 2.300€</span></div>
+          <div class="prog-bar"><div class="prog-fill" id="woh-prog" style="width:0%;background:var(--blue)"></div></div>
+        </div>
+        <div style="margin-top:14px">
+          <div class="row"><div class="row-label">Mar 2026 ✅</div><div class="row-value green">357,50€</div></div>
+          <div class="row"><div class="row-label">Abr 2026 (en curso)</div><div class="row-value amber">357,50€</div></div>
+          <div class="row"><div class="row-label">Restante para meta</div><div class="row-value" id="woh-restante">—</div></div>
+        </div>
+      </div>
+
+      <div class="section-label">Opciones mercado real</div>
+      <div class="card">
+        <div class="card-title">3-Zimmer · comparativa zonas</div>
+        <div class="row">
+          <div class="row-label">Freital-Deuben<small>~75m² · 7,67€/m²</small></div>
+          <div style="text-align:right"><div class="row-value" style="font-size:13px">390€<span style="color:var(--text3);font-size:11px">/mes 50%</span></div><div class="badge badge-green" style="margin-top:4px">más barato</div></div>
+        </div>
+        <div class="row" style="background:var(--blue-dim);border-radius:8px;padding:10px;margin:4px -4px;border:1px solid rgba(91,142,255,0.2)">
+          <div class="row-label">Dresden-Löbtau ⭐<small>~78m² · 9€/m²</small></div>
+          <div style="text-align:right"><div class="row-value blue">465€<span style="color:var(--text3);font-size:11px">/mes 50%</span></div><div class="badge badge-blue" style="margin-top:4px">objetivo</div></div>
+        </div>
+        <div class="row">
+          <div class="row-label">Dresden-Plauen<small>~80m² · 10€/m²</small></div>
+          <div style="text-align:right"><div class="row-value" style="font-size:13px">525€<span style="color:var(--text3);font-size:11px">/mes 50%</span></div><div class="badge badge-amber" style="margin-top:4px">más caro</div></div>
+        </div>
+      </div>
+
+      <div class="section-label">Presupuesto entrada (Löbtau · tu 50%)</div>
+      <div class="card">
+        <div class="row"><div class="row-label">Kaution (3 × 700€)</div><div class="row-value">1.050€</div></div>
+        <div class="row"><div class="row-label">Primer mes Warmmiete</div><div class="row-value">465€</div></div>
+        <div class="row"><div class="row-label">Mudanza / transporte</div><div class="row-value">150€</div></div>
+        <div class="row"><div class="row-label">Muebles esenciales</div><div class="row-value">350€</div></div>
+        <div class="row"><div class="row-label">Imprevistos</div><div class="row-value">285€</div></div>
+        <div class="row"><div class="row-label">TOTAL</div><div class="row-value blue">2.300€</div></div>
+      </div>
+
+      <div class="section-label">Checklist Vermieter</div>
+      <div class="card">
+        <div class="row"><div class="row-label">Schufa limpia</div><div class="badge badge-green">✅ Las dos</div></div>
+        <div class="row"><div class="row-label">3 Gehaltsnachweise</div><div class="badge badge-amber">preparar</div></div>
+        <div class="row"><div class="row-label">Arbeitsvertrag</div><div class="badge badge-amber">preparar</div></div>
+        <div class="row"><div class="row-label">Mietschuldenfreiheit</div><div class="badge badge-amber">pedir</div></div>
+        <div class="row"><div class="row-label">Ingresos combinados</div><div class="row-value green">>4.400€ netos</div></div>
+        <div class="row"><div class="row-label">Iniciar búsqueda</div><div class="badge badge-blue">May 2026</div></div>
+      </div>
+    </div>
+
+    <!-- METAS -->
+    <div id="s-metas" class="section">
+      <div class="section-label">Ahorro activo</div>
+      <div class="card">
+        <div class="card-title">Fondo de emergencia</div>
+        <div class="row"><div class="row-label">Meta mínima (3 meses)</div><div class="row-value">1.482€</div></div>
+        <div class="row"><div class="row-label">Aportación mensual</div><div class="row-value green">100€</div></div>
+        <div class="row"><div class="row-label">Dónde</div><div class="row-value">TR Tagesgeld ~4%</div></div>
+        <div class="row"><div class="row-label">Plazo estimado</div><div class="badge badge-amber">Jun 2027</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">3-Zimmer Dresden · Löbtau/Plauen (tu 50%)</div>
+        <div class="row"><div class="row-label">Meta total</div><div class="row-value">2.300€</div></div>
+        <div class="row"><div class="row-label">Aportación mensual</div><div class="row-value blue">357€ (minijob)</div></div>
+        <div class="row"><div class="row-label">Dónde</div><div class="row-value">Wise Jar</div></div>
+        <div class="row"><div class="row-label">Tu warmmiete después</div><div class="row-value">~465€/mes</div></div>
+        <div class="row"><div class="row-label">Kaution tu parte</div><div class="row-value amber">~1.050€</div></div>
+        <div class="row"><div class="row-label">Plazo</div><div class="badge badge-green">Oct 2026</div></div>
+      </div>
+      <div class="section-label">Deudas activas</div>
+      <div class="card">
+        <div class="row"><div class="row-label">Arki<small>pagada 4/4/2026</small></div><div class="badge badge-green">✅ Liquidada</div></div>
+        <div class="row"><div class="row-label">Familiar (Ramón)<small>sin interés · hasta Jun 2029</small></div><div class="row-value amber">200€/mes</div></div>
+        <div class="row"><div class="row-label">Pagado hasta hoy</div><div class="row-value" id="meta-deuda-pagado">200€</div></div>
+        <div class="row"><div class="row-label">Restante</div><div class="row-value red" id="meta-deuda-restante">~7.250€</div></div>
+      </div>
+      <div class="section-label">Steuererklärung 2026</div>
+      <div class="card">
+        <div class="row"><div class="row-label">Obligada por</div><div class="row-value">2 empleadores</div></div>
+        <div class="row"><div class="row-label">Software</div><div class="row-value">WISO ~24€/año</div></div>
+        <div class="row"><div class="row-label">Plazo</div><div class="row-value">31 Jul 2027</div></div>
+        <div class="row"><div class="row-label">Devolución estimada</div><div class="row-value green">600-1.200€</div></div>
+        <div class="row"><div class="row-label">Deducir</div><div class="row-value" style="font-size:12px">B2 · mudanza · Fahrtkosten</div></div>
+      </div>
+    </div>
+
+    <!-- SPARPLAN -->
+    <div id="s-sparplan" class="section">
+      <div class="card">
+        <div class="card-title">Calculadora VWCE — 7% anual</div>
+        <div class="calc-field">
+          <div class="range-row">
+            <label>Aportación mensual</label>
+            <span class="range-val" id="sp-val">100€</span>
+          </div>
+          <input type="range" min="50" max="600" step="10" value="100" id="sp-range" oninput="updateSparplan()">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:4px"><span>50€</span><span>600€</span></div>
+        </div>
+        <div class="calc-field">
+          <div class="range-row">
+            <label>Años de inversión</label>
+            <span class="range-val" id="yr-val">10 años</span>
+          </div>
+          <input type="range" min="1" max="30" step="1" value="10" id="yr-range" oninput="updateSparplan()">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:4px"><span>1 año</span><span>30 años</span></div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-grid">
+            <div class="calc-result-item"><div class="cr-label">Invertido</div><div class="cr-value" style="color:var(--text2)" id="sp-invested">12.000€</div></div>
+            <div class="calc-result-item"><div class="cr-label">Valor final</div><div class="cr-value" style="color:var(--green)" id="sp-final">17.409€</div></div>
+          </div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+            <div class="cr-label">Ganancia por interés compuesto</div>
+            <div class="cr-value" style="color:var(--purple);font-size:22px;margin-top:4px" id="sp-gain">+5.409€</div>
+          </div>
+        </div>
+        <div class="chart-container" style="height:160px;margin-top:16px"><canvas id="spChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">VWCE — datos del ETF</div>
+        <div class="row"><div class="row-label">ISIN</div><div class="row-value" style="font-family:var(--mono);font-size:13px">IE00B3RBWM25</div></div>
+        <div class="row"><div class="row-label">Tipo</div><div class="row-value">Acumulativo</div></div>
+        <div class="row"><div class="row-label">TER anual</div><div class="row-value green">0,22%</div></div>
+        <div class="row"><div class="row-label">Diversificación</div><div class="row-value">+4.000 empresas</div></div>
+        <div class="row"><div class="row-label">Freistellungsauftrag</div><div class="badge badge-purple">1.000€/año</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Plan por fases</div>
+        <div class="row"><div class="row-label">Ahora (Abr 2026)<small>activo</small></div><div class="row-value green">100€/mes</div></div>
+        <div class="row"><div class="row-label">Oct 2026+ — mudanza<small>minijob liberado</small></div><div class="row-value blue">460-500€/mes</div></div>
+        <div class="row"><div class="row-label">2027+ — FE completado</div><div class="row-value purple">500€+/mes</div></div>
+      </div>
+    </div>
+
+    <!-- CUENTAS -->
+    <div id="s-cuentas" class="section">
+      <div class="acc-card" style="border-color:rgba(91,142,255,0.3)">
+        <div class="acc-header" style="background:rgba(91,142,255,0.06)">
+          <div class="acc-avatar" style="background:var(--blue-dim);color:var(--blue)">SP</div>
+          <div class="acc-info"><div class="acc-name">Sparkasse</div><div class="acc-role">Cuenta operativa — hub central</div></div>
+        </div>
+        <div class="acc-body">
+          <div class="row"><div class="row-label">Qué entra</div><div class="row-value">Sueldo + minijob</div></div>
+          <div class="row"><div class="row-label">Qué sale</div><div class="row-value">Todo lo automático</div></div>
+          <div class="row"><div class="row-label">Regla</div><div class="badge badge-amber">No ahorrar aquí</div></div>
+        </div>
+      </div>
+      <div class="acc-card" style="border-color:rgba(46,204,138,0.3)">
+        <div class="acc-header" style="background:rgba(46,204,138,0.06)">
+          <div class="acc-avatar" style="background:var(--green-dim);color:var(--green)">WI</div>
+          <div class="acc-info"><div class="acc-name">Wise — Jars</div><div class="acc-role">Cuenta de objetivos — cofre</div></div>
+        </div>
+        <div class="acc-body">
+          <div class="row"><div class="row-label">Jar 3-Zimmer Dresden<small>357€/mes · meta 2.300€ · Löbtau/Plauen</small></div><div class="row-value green">Oct 2026</div></div>
+          <div class="row"><div class="row-label">Jar Buffer<small>sobrantes → colchón</small></div><div class="row-value">permanente</div></div>
+          <div class="row"><div class="row-label">Regla</div><div class="badge badge-green">Solo sacar para la meta</div></div>
+        </div>
+      </div>
+      <div class="acc-card" style="border-color:rgba(167,139,250,0.3)">
+        <div class="acc-header" style="background:rgba(167,139,250,0.06)">
+          <div class="acc-avatar" style="background:var(--purple-dim);color:var(--purple)">TR</div>
+          <div class="acc-info"><div class="acc-name">Trade Republic</div><div class="acc-role">Inversión + Fondo emergencia</div></div>
+        </div>
+        <div class="acc-body">
+          <div class="row"><div class="row-label">Tagesgeld (FE)<small>100€/mes · ~4% interés</small></div><div class="row-value green">0 / 1.482€</div></div>
+          <div class="row"><div class="row-label">Sparplan VWCE<small>100€/mes · automatizado</small></div><div class="row-value purple">activo</div></div>
+          <div class="row"><div class="row-label">Freistellungsauftrag</div><div class="badge badge-purple">1.000€/año</div></div>
+          <div class="row"><div class="row-label">Regla</div><div class="badge badge-green">No tocar hasta 2035+</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="safe-bottom"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ─── CONFIG ────────────────────────────────────────────────
+const GASTOS_ID   = '1-FT01OlP0THXdU7Yj3iZ1d3fVi2zXu0zOV8fNAq8lg4';
+const GASTOS_GID  = '1222389207'; // pestaña Abril (la actual)
+
+// Meta constantes
+const META_WOHNUNG = 2300;
+const META_FE      = 1482;
+const META_DEUDA   = 7450;
+const DEUDA_PAGADO_INICIO = 200; // primer pago abril
+
+// Ahorro wohnung acumulado: Mar(357.5) + Abr(357.5)
+const WOHNUNG_ACUM = 357.5 * 2; // 715€ al completarse abril
+
+// Meses ahorro wohnung ya completados
+const WOHNUNG_COMPLETADO = 357.5; // solo marzo confirmado al sync
+
+// ─── UTILS ─────────────────────────────────────────────────
+function fmtE(n, dec=0) {
+  if(isNaN(n)) return '—';
+  return n.toLocaleString('de-DE',{minimumFractionDigits:dec,maximumFractionDigits:dec})+'€';
+}
+function setEl(id, val) { const el = document.getElementById(id); if(el) el.textContent = val; }
+function setWidth(id, pct) { const el = document.getElementById(id); if(el) el.style.width = Math.min(pct,100)+'%'; }
+
+// ─── DATE ──────────────────────────────────────────────────
+const now = new Date();
+document.getElementById('live-date').textContent =
+  now.toLocaleDateString('es-DE',{day:'2-digit',month:'short',year:'2-digit'});
+
+// ─── NAV ───────────────────────────────────────────────────
+let donutInst = null, spChartInst = null;
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id==='resumen') setTimeout(initDonut,50);
+  if(id==='sparplan') setTimeout(updateSparplan,50);
+}
+
+// ─── FETCH GOOGLE SHEET (public, no API key needed) ────────
+async function fetchSheet(sheetId, gid) {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  const text = await res.text();
+  return parseCSV(text);
+}
+
+function parseCSV(text) {
+  const lines = text.split('\n');
+  return lines.map(line => {
+    const cols = [];
+    let cur = '', inQ = false;
+    for(let i=0;i<line.length;i++){
+      if(line[i]==='"') { inQ=!inQ; continue; }
+      if(line[i]===',' && !inQ) { cols.push(cur.trim()); cur=''; continue; }
+      cur += line[i];
+    }
+    cols.push(cur.trim());
+    return cols;
+  });
+}
+
+function parseNum(s) {
+  if(!s) return 0;
+  return parseFloat(s.replace(/[€$\s]/g,'').replace(',','.')) || 0;
+}
+
+// ─── CATEGORY MAPPING ──────────────────────────────────────
+function categorize(item) {
+  const s = (item||'').toLowerCase();
+  if(s.includes('comida')||s.includes('lebensmittel')||s.includes('rewe')||s.includes('lidl')||s.includes('aldi')) return 'Comida';
+  if(s.includes('aseo')||s.includes('hogar')||s.includes('plancha')||s.includes('sart')||s.includes('cosas')) return 'Hogar/Aseo';
+  if(s.includes('farmacia')||s.includes('medic')||s.includes('arzt')) return 'Farmacia/Salud';
+  if(s.includes('cafe')||s.includes('café')||s.includes('ocio')||s.includes('social')||s.includes('jule')||s.includes('sehare')) return 'Ocio/Social';
+  if(s.includes('envio')||s.includes('paquete')||s.includes('compra para')) return 'Extras/Envíos';
+  if(s.includes('maleta')||s.includes('zapato')||s.includes('ropa')) return 'Ropa/Accesorios';
+  if(s.includes('regalo')||s.includes('teo')) return 'Regalos';
+  if(s.includes('arki')) return 'Comida'; // comida Arki
+  return 'Otros';
+}
+
+const CAT_COLORS = {
+  'Comida':'#5B8EFF','Hogar/Aseo':'#A78BFA','Farmacia/Salud':'#2ECC8A',
+  'Ocio/Social':'#F5A623','Extras/Envíos':'#FF5E5E','Ropa/Accesorios':'#FF8C42',
+  'Regalos':'#F5A623','Otros':'#5A5A6E'
+};
+
+// ─── LOAD GASTOS FROM SHEET ────────────────────────────────
+async function loadGastos() {
+  document.getElementById('gastos-loading').style.display = 'flex';
+  document.getElementById('gastos-content').style.display = 'none';
+  document.getElementById('resumen-loading').style.display = 'flex';
+  document.getElementById('resumen-content').style.display = 'none';
+
+  try {
+    const rows = await fetchSheet(GASTOS_ID, GASTOS_GID);
+
+    // Parse variables (col A=fecha, B=monto, C=item) rows 3..34
+    const gastos = [];
+    for(let i=2; i<rows.length; i++){
+      const r = rows[i];
+      if(!r[0]||!r[1]) continue;
+      const monto = parseNum(r[1]);
+      const item  = r[2]||'';
+      if(monto>0 && r[0].match(/\d/)) {
+        gastos.push({ fecha:r[0], monto, item, cat: categorize(item) });
+      }
+    }
+
+    // Parse fijos (col E=item, F=monto) rows 3..14
+    const fijos = [];
+    let totalFijos = 0;
+    for(let i=2; i<rows.length; i++){
+      const r = rows[i];
+      if(r[4] && r[5] && parseNum(r[5])>0) {
+        const m = parseNum(r[5]);
+        fijos.push({ item: r[4], monto: m });
+        totalFijos += m;
+      }
+    }
+
+    // Parse ingresos (col H=item, I=monto)
+    let totalIngreso = 0;
+    for(let i=2;i<rows.length;i++){
+      const r=rows[i];
+      if(r[7]&&r[8]&&parseNum(r[8])>0) totalIngreso+=parseNum(r[8]);
+      if(r[7]==='Monto del mes pasado'&&r[8]) totalIngreso+=parseNum(r[8]);
+    }
+    // Also check row 8 "Total"
+    for(let i=2;i<rows.length;i++){
+      const r=rows[i];
+      if(r[7]==='Total'&&parseNum(r[8])>0){ totalIngreso=parseNum(r[8]); break; }
+    }
+
+    // Monto libre
+    let montoLibre = 0;
+    for(let i=2;i<rows.length;i++){
+      const r=rows[i];
+      if(r[4]==='Monto libre'&&r[5]) { montoLibre=parseNum(r[5]); break; }
+    }
+
+    const totalVariables = gastos.reduce((a,g)=>a+g.monto,0);
+
+    // ── Update Resumen ──
+    setEl('r-ingreso', fmtE(totalIngreso));
+    setEl('r-fijos', fmtE(totalFijos));
+    setEl('r-variables', fmtE(totalVariables));
+    setEl('r-libre', fmtE(montoLibre));
+    setEl('fl-ingreso', '+'+fmtE(totalIngreso));
+    setEl('fl-resto', '~'+fmtE(montoLibre));
+
+    // Wohnung progress (marzo 357.5 + abril en curso = 357.5+357.5)
+    const wohnungAcum = WOHNUNG_COMPLETADO; // marzo confirmado; abril se acumula al cierre
+    const wohnungPct = (wohnungAcum/META_WOHNUNG)*100;
+    setEl('prog-wohnung-txt', fmtE(wohnungAcum)+' / '+fmtE(META_WOHNUNG));
+    setWidth('prog-wohnung', wohnungPct);
+    setEl('woh-acum', fmtE(wohnungAcum));
+    setEl('woh-prog-txt', fmtE(wohnungAcum)+' / '+fmtE(META_WOHNUNG));
+    setWidth('woh-prog', wohnungPct);
+    setEl('woh-restante', fmtE(META_WOHNUNG - wohnungAcum));
+
+    // FE progress (100€/mes × meses, empezó abril)
+    const fePagado = 100;
+    setEl('prog-fe-txt', fmtE(fePagado)+' / '+fmtE(META_FE));
+    setWidth('prog-fe', (fePagado/META_FE)*100);
+
+    // Deuda progress (200€ primer pago)
+    const deudaPagado = DEUDA_PAGADO_INICIO;
+    setEl('prog-deuda-txt', fmtE(deudaPagado)+' / '+fmtE(META_DEUDA));
+    setWidth('prog-deuda', (deudaPagado/META_DEUDA)*100);
+    setEl('meta-deuda-pagado', fmtE(deudaPagado));
+    setEl('meta-deuda-restante', '~'+fmtE(META_DEUDA - deudaPagado));
+
+    // Sync time
+    const t = new Date();
+    setEl('sync-time-gastos', t.toLocaleTimeString('es-DE',{hour:'2-digit',minute:'2-digit'}));
+    setEl('sync-mes', 'Abril 2026 · en curso');
+
+    // ── Render Gastos tab ──
+    renderCatBars(gastos);
+    renderFijos(fijos, totalFijos);
+    renderDetalle(gastos, totalVariables);
+
+    document.getElementById('gastos-loading').style.display = 'none';
+    document.getElementById('gastos-content').style.display = 'block';
+    document.getElementById('resumen-loading').style.display = 'none';
+    document.getElementById('resumen-content').style.display = 'block';
+
+    setTimeout(initDonut, 50);
+
+  } catch(e) {
+    document.getElementById('gastos-loading').innerHTML =
+      `<div class="error-state">❌ Error cargando Sheet: ${e.message}<br><small>Verifica que el Sheet sea público</small></div>`;
+    document.getElementById('resumen-loading').style.display = 'none';
+    document.getElementById('resumen-content').style.display = 'block';
+    setTimeout(initDonut, 50);
+  }
+}
+
+function renderCatBars(gastos) {
+  const cats = {};
+  gastos.forEach(g=>{ cats[g.cat]=(cats[g.cat]||0)+g.monto; });
+  const total = Object.values(cats).reduce((a,b)=>a+b,0)||1;
+  const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('cat-bars').innerHTML = sorted.map(([cat,amt])=>`
+    <div class="cat-bar-wrap">
+      <div class="cat-bar-header">
+        <span class="cat-bar-label">${cat}</span>
+        <span class="cat-bar-val">${fmtE(amt,2)}</span>
+      </div>
+      <div class="cat-bar">
+        <div class="cat-bar-fill" style="width:${(amt/total*100).toFixed(1)}%;background:${CAT_COLORS[cat]||'#5A5A6E'}"></div>
+      </div>
+    </div>`).join('');
+}
+
+function renderFijos(fijos, total) {
+  document.getElementById('g-total-fijos').textContent = fmtE(total);
+  document.getElementById('fijos-list').innerHTML = fijos.map(f=>`
+    <div class="row">
+      <div class="row-label">${f.item}</div>
+      <div class="row-value">${fmtE(f.monto,2)}</div>
+    </div>`).join('');
+}
+
+function renderDetalle(gastos, total) {
+  document.getElementById('g-total-variables').textContent = fmtE(total,2);
+  document.getElementById('gastos-detalle').innerHTML = gastos.map(g=>`
+    <div class="gasto-item">
+      <div class="gi-left">
+        <div class="gi-desc">${g.item}</div>
+        <div class="gi-cat">${g.cat} · ${g.fecha}</div>
+      </div>
+      <div class="gi-right">
+        <div class="gi-amount">${fmtE(g.monto,2)}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── SYNC BUTTON ───────────────────────────────────────────
+async function syncAll() {
+  const btn = document.getElementById('sync-btn');
+  btn.textContent = '↻ Sync...';
+  btn.className = 'sync-btn syncing';
+  await loadGastos();
+  btn.textContent = '✓ Sync';
+  btn.className = 'sync-btn ok';
+  setTimeout(()=>{ btn.textContent='↻ Sync'; btn.className='sync-btn'; }, 3000);
+}
+
+// ─── DONUT CHART ───────────────────────────────────────────
+function initDonut() {
+  const canvas = document.getElementById('donutChart');
+  if(!canvas) return;
+  if(donutInst) donutInst.destroy();
+  donutInst = new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels: ['Sparplan','3-Zimmer','FE','Deuda Ramón','Fijos','Variables'],
+      datasets: [{
+        data: [100, 357, 100, 200, 197, 245],
+        backgroundColor: ['#A78BFA','#5B8EFF','#2ECC8A','#F5A623','rgba(154,154,175,0.5)','#FF5E5E'],
+        borderWidth: 0, hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '68%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c=>' '+c.label+': '+c.parsed+'€' } }
+      }
+    }
+  });
+}
+
+// ─── SPARPLAN CALCULATOR ───────────────────────────────────
+function updateSparplan() {
+  const m = parseInt(document.getElementById('sp-range').value);
+  const y = parseInt(document.getElementById('yr-range').value);
+  document.getElementById('sp-val').textContent = m+'€';
+  document.getElementById('yr-val').textContent = y+(y===1?' año':' años');
+  const rate = 0.07/12;
+  let fv=0; const yearly=[],invYearly=[];
+  for(let i=0;i<y*12;i++){
+    fv=(fv+m)*(1+rate);
+    if((i+1)%12===0){ yearly.push(Math.round(fv)); invYearly.push(Math.round(m*12*((i+1)/12))); }
+  }
+  const invested=m*y*12;
+  document.getElementById('sp-invested').textContent=fmtE(invested);
+  document.getElementById('sp-final').textContent=fmtE(Math.round(fv));
+  document.getElementById('sp-gain').textContent='+'+fmtE(Math.round(fv-invested));
+  const canvas=document.getElementById('spChart');
+  if(!canvas) return;
+  if(spChartInst) spChartInst.destroy();
+  const labels=Array.from({length:y},(_,i)=>y<=10?'Año '+(i+1):(i+1)+'a');
+  spChartInst=new Chart(canvas,{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'Invertido',data:invYearly,backgroundColor:'rgba(91,142,255,0.3)',stack:'a',borderRadius:2},
+      {label:'Ganancia',data:yearly.map((v,i)=>Math.round(v-invYearly[i])),backgroundColor:'#A78BFA',stack:'a',borderRadius:2}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+fmtE(c.parsed.y)}}},
+      scales:{
+        x:{stacked:true,grid:{display:false},ticks:{color:'#5A5A6E',font:{size:11},autoSkip:true,maxTicksLimit:8}},
+        y:{stacked:true,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#5A5A6E',font:{size:11},callback:v=>Math.round(v/1000)+'k'}}
+      }
+    }
+  });
+}
+
+// ─── INIT ──────────────────────────────────────────────────
+loadGastos();
+</script>
+</body>
+</html>
