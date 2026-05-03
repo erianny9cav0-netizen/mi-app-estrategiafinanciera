@@ -593,19 +593,36 @@ function show(id,btn) {
 }
 
 // ═══ CATEGORIES ═══
-const CAT_METAS = {'Comida':150,'Hogar/Aseo':40,'Farmacia':15,'Ocio/Social':40,'Ropa':20};
+const CAT_METAS = {
+  'Comida':150,'Hogar/Aseo':40,'Farmacia':15,
+  'Ocio/Social':40,'Ropa':20,'Trámites':0,
+  'Extras':0,'Familia/Regalos':0,'Otros':0
+};
 const CAT_COLORS = {
   'Comida':'#5B8EFF','Hogar/Aseo':'#A78BFA','Farmacia':'#2ECC8A',
-  'Ocio/Social':'#F5A623','Extras':'#FF5E5E','Ropa':'#FF8C42','Otros':'#5A5A6E'
+  'Ocio/Social':'#F5A623','Extras':'#FF5E5E','Ropa':'#FF8C42',
+  'Trámites':'#E91E63','Familia/Regalos':'#26C6DA','Otros':'#5A5A6E'
 };
 function categorize(item) {
-  const s=(item||'').toLowerCase();
-  if(/comida|rewe|lidl|aldi|lebensmittel/.test(s)) return 'Comida';
-  if(/aseo|hogar|peluq|uña|nail|plancha|mama/.test(s)) return 'Hogar/Aseo';
-  if(/farmacia|medic|arzt|salud/.test(s)) return 'Farmacia';
-  if(/cafe|café|ocio|social|bjj/.test(s)) return 'Ocio/Social';
-  if(/zapato|ropa|kleid/.test(s)) return 'Ropa';
-  if(/envio|paquete|regalo|extra/.test(s)) return 'Extras';
+  const s = (item || '').toLowerCase().trim();
+  // Coincidencia exacta con nombres del desplegable de tu Sheet
+  if (s === 'comida' || s === 'comida arki')        return 'Comida';
+  if (s === 'hogar y aseo')                          return 'Hogar/Aseo';
+  if (s === 'farmacia y salud')                      return 'Farmacia';
+  if (s === 'ocio')                                  return 'Ocio/Social';
+  if (s === 'ropa y calzados')                       return 'Ropa';
+  if (s === 'sozialamt')                             return 'Trámites';
+  if (s === 'besucht bei arki' || s === 'extras')    return 'Extras';
+  if (s === 'regalos a mi familia')                  return 'Familia/Regalos';
+  // Fallback por palabras clave
+  if (/comida|rewe|lidl|aldi/.test(s))               return 'Comida';
+  if (/aseo|hogar|peluq|uña|nail/.test(s))           return 'Hogar/Aseo';
+  if (/farmacia|medic|salud/.test(s))                return 'Farmacia';
+  if (/ocio|cafe|café|bjj/.test(s))                  return 'Ocio/Social';
+  if (/ropa|zapato|calzado/.test(s))                 return 'Ropa';
+  if (/sozialamt|trámite/.test(s))                   return 'Trámites';
+  if (/arki|extra/.test(s))                          return 'Extras';
+  if (/regalo|familia/.test(s))                      return 'Familia/Regalos';
   return 'Otros';
 }
 
@@ -629,6 +646,9 @@ async function loadGastos() {
     setEl('r-fijos',     fmtE(d.totalFijos));
     setEl('r-variables', fmtE(d.totalVariables));
     setEl('r-libre',     fmtE(d.montoLibre));
+    // KPIs pestaña Gastos
+    setEl('g-tot-var',   fmtE(d.totalVariables, 2));
+    setEl('g-tot-fij',   fmtE(d.totalFijos, 2));
     setEl('r-mes',       d.mes+' 2026');
     setEl('r-sync-time', new Date().toLocaleTimeString('es-DE',{hour:'2-digit',minute:'2-digit'}));
     setEl('fl-ingreso',  '+'+fmtE(d.ingreso));
