@@ -185,7 +185,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div id="s-resumen" class="section active">
       <div id="r-loading" class="loading-state"><div class="spinner"></div><span>Cargando datos...</span></div>
       <div id="r-error" class="error-box" style="display:none"></div>
-      <div id="r-content" style="display:none">
+      <div style="background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.3);border-radius:8px;padding:12px 14px;font-size:13px;color:#F5A623;margin-bottom:12px;line-height:1.6">
+  ⚡ <strong>Ajuste temporal May–Sep 2026:</strong> Sozialamt 393€/mes · Sparplan 50€ · Ramón 100€. Se normaliza en Oct con la mudanza.
+</div>
         <div class="kpi-grid">
           <div class="kpi green"><div class="k-label">Ingreso neto</div><div class="k-value" id="r-ingreso">—</div><div class="k-sub">Este mes</div></div>
           <div class="kpi blue"><div class="k-label">Fijos</div><div class="k-value" id="r-fijos">—</div><div class="k-sub">Compromisos</div></div>
@@ -215,10 +217,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
           <div class="card-title">Distribución ingreso neto</div>
           <div class="chart-container"><canvas id="donutChart"></canvas></div>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
-            <span class="badge badge-purple">Sparplan 100€</span>
+            <span class="badge badge-purple">Sparplan 50€</span>
             <span class="badge badge-blue">3-Zimmer 357€</span>
             <span class="badge badge-green">FE 100€</span>
-            <span class="badge badge-red">Ramón 200€</span>
+            <span class="badge badge-red">Ramón 100€</span>
+            <span style="background:rgba(233,30,99,0.12);color:#E91E63;font-size:11px;font-weight:500;padding:3px 8px;border-radius:6px;font-family:var(--mono)">Sozialamt 393€ ⚡</span>
             <span class="badge" style="background:rgba(154,154,175,0.12);color:var(--text2)">Fijos ~197€</span>
             <span class="badge badge-amber">Variables ~245€</span>
           </div>
@@ -307,16 +310,20 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         </div>
         <div class="flow-item">
           <div class="flow-icon" style="background:var(--purple-dim);color:var(--purple)">SP</div>
-          <div class="flow-body"><div class="flow-name">Sparplan VWCE</div><div class="flow-desc">Automático · no tocar hasta 2035+</div></div>
-          <div class="flow-amount" style="color:var(--purple)">−100€</div>
+          <div class="flow-body"><div class="flow-name">Sparplan VWCE <span style="font-size:10px;background:rgba(245,166,35,0.15);color:#F5A623;padding:2px 6px;border-radius:4px;font-family:var(--mono)">temporal</span></div><div class="flow-desc">Reducido hasta Oct 2026 · meta 500€/mes</div></div>
+          <div class="flow-amount" style="color:var(--purple)">−50€</div>
         </div>
         <div class="flow-item">
           <div class="flow-icon" style="background:var(--amber-dim);color:var(--amber)">D</div>
-          <div class="flow-body"><div class="flow-name">Deuda familiar (Ramón)</div><div class="flow-desc">Orden permanente · hasta Jun 2029</div></div>
-          <div class="flow-amount" style="color:var(--amber)">−200€</div>
+          <div class="flow-body"><div class="flow-name">Deuda familiar (Ramón) <span style="font-size:10px;background:rgba(245,166,35,0.15);color:#F5A623;padding:2px 6px;border-radius:4px;font-family:var(--mono)">temporal</span></div><div class="flow-desc">Reducido · vuelve a 200€ en Oct 2026</div></div>
+          <div class="flow-amount" style="color:var(--amber)">−100€</div>
         </div>
         <div class="flow-item">
-          <div class="flow-icon" style="background:var(--surface3);color:var(--green)">✓</div>
+          <div class="flow-item" style="border-style:dashed;border-color:rgba(233,30,99,0.5)">
+  <div class="flow-icon" style="background:rgba(233,30,99,0.12);color:#E91E63">SZ</div>
+  <div class="flow-body"><div class="flow-name">Alquiler Sozialamt <span style="font-size:10px;background:rgba(233,30,99,0.15);color:#E91E63;padding:2px 6px;border-radius:4px;font-family:var(--mono)">nuevo</span></div><div class="flow-desc">Pago mes vencido · hasta mudanza Oct 2026</div></div>
+  <div class="flow-amount" style="color:#E91E63">−393€</div>
+</div>
           <div class="flow-body"><div class="flow-name">Arki <span class="badge badge-green" style="font-size:10px">✅ liquidada</span></div><div class="flow-desc">Pagada el 4/4/2026</div></div>
           <div class="flow-amount" style="color:var(--green)">0€</div>
         </div>
@@ -890,10 +897,10 @@ function initDonut() {
   donutInst=new Chart(canvas,{
     type:'doughnut',
     data:{
-      labels:['Sparplan','3-Zimmer','FE','Ramón','Fijos','Variables'],
+      labels:['Sparplan','3-Zimmer','FE','Ramón','Sozialamt','Fijos','Variables'],
       datasets:[{
-        data:[100,357,100,200,197,245],
-        backgroundColor:['#A78BFA','#5B8EFF','#2ECC8A','#F5A623','rgba(154,154,175,0.5)','#FF5E5E'],
+        data:[50,357,100,100,549,245],
+        backgroundColor:['#A78BFA','#5B8EFF','#2ECC8A','#F5A623','#E91E63','rgba(154,154,175,0.5)','#FF5E5E'],
         borderWidth:0,hoverOffset:4
       }]
     },
