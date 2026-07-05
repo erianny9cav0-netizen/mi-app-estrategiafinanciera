@@ -647,7 +647,7 @@ async function loadGastos() {
     setEl('fl-resto',    '~'+fmtE(d.montoLibre));
 
     // Wohnung acumulado (minijob × meses desde Mar)
-    const wohAcum = 357.5; // Mar confirmado — Apr en curso
+   const wohAcum = 0; // se carga desde loadWohnung()
     setEl('woh-acum', fmtE(wohAcum));
     setEl('woh-prog-txt', fmtE(wohAcum)+' / '+fmtE(META_WOH));
     setW('woh-prog', (wohAcum/META_WOH)*100);
@@ -940,6 +940,7 @@ loadGastos();
 loadFE();
 loadRamon();
 loadHistorial();
+loadWohnung();
 </script>
 </body>
 </html>
