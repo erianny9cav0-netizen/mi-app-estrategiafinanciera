@@ -23,19 +23,8 @@
   --font:'DM Sans',sans-serif; --mono:'DM Mono',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html, body {
-  min-height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 15px;
-  overflow-x: hidden;
-}
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 .header{padding:14px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg)}
 .header-left .greeting{font-size:11px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;font-weight:500}
 .header-left .name{font-size:20px;font-weight:600;color:var(--text);line-height:1.2}
@@ -50,11 +39,9 @@ html, body {
 .nav-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:13px;font-family:var(--font);font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
 .nav-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 .nav-btn:active{transform:scale(.96)}
-.content {
-  flex: 1;
-  padding: 16px;
-  overflow-y: auto;
-}
+.content{flex:1;overflow-y:auto;padding:16px;scrollbar-width:thin;scrollbar-color:var(--surface3) transparent}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
 .section{display:none;animation:fadeIn .2s ease}
 .section.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
@@ -148,6 +135,7 @@ html, body {
 .error-box{background:var(--red-dim);border:1px solid rgba(255,94,94,0.2);border-radius:var(--r-sm);padding:12px 14px;font-size:13px;color:var(--red);margin-bottom:12px;line-height:1.5}
 .live-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:5px;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* HISTORIAL */
 .hist-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:8px}
 .hist-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .hist-mes{font-size:13px;font-weight:600;color:var(--text)}
@@ -158,6 +146,7 @@ html, body {
 .hist-tar{display:flex;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
 .hist-tar-bar{flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;margin:0 10px}
 .hist-tar-fill{height:100%;border-radius:2px}
+/* PAGO RAMON */
 .pago-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
 .pago-item:last-child{border-bottom:none}
 .pago-fecha{font-size:12px;color:var(--text3);margin-top:2px}
@@ -192,84 +181,87 @@ html, body {
 
   <div class="content">
 
-    <!-- RESUMEN -->
+    <!-- ═══ RESUMEN ═══ -->
     <div id="s-resumen" class="section active">
       <div id="r-loading" class="loading-state"><div class="spinner"></div><span>Cargando datos...</span></div>
       <div id="r-error" class="error-box" style="display:none"></div>
-      <div style="background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.3);border-radius:8px;padding:12px 14px;font-size:13px;color:#F5A623;margin-bottom:12px;line-height:1.6">
-        ⚡ <strong>Ajuste temporal May–Sep 2026:</strong> Sozialamt 393€/mes · Sparplan 50€ · Ramón 100€. Se normaliza en Oct con la mudanza.
-      </div>
-      <div class="kpi-grid">
-        <div class="kpi green"><div class="k-label">Ingreso neto</div><div class="k-value" id="r-ingreso">—</div><div class="k-sub">Este mes</div></div>
-        <div class="kpi blue"><div class="k-label">Fijos</div><div class="k-value" id="r-fijos">—</div><div class="k-sub">Compromisos</div></div>
-        <div class="kpi amber"><div class="k-label">Variables</div><div class="k-value" id="r-variables">—</div><div class="k-sub">Gastado hasta hoy</div></div>
-        <div class="kpi"><div class="k-label">Monto libre</div><div class="k-value" id="r-libre">—</div><div class="k-sub">Estimado mes</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Estado de metas</div>
-        <div class="prog-wrap">
-          <div class="prog-header"><span class="prog-label">3-Zimmer Dresden</span><span class="prog-nums" id="prog-woh-txt">— / 2.300€</span></div>
-          <div class="prog-bar"><div class="prog-fill" id="prog-woh" style="width:0%;background:var(--blue)"></div></div>
+      <div id="r-content" style="display:none">
+        <div class="kpi-grid">
+          <div class="kpi green"><div class="k-label">Ingreso neto</div><div class="k-value" id="r-ingreso">—</div><div class="k-sub">Este mes</div></div>
+          <div class="kpi blue"><div class="k-label">Fijos</div><div class="k-value" id="r-fijos">—</div><div class="k-sub">Compromisos</div></div>
+          <div class="kpi amber"><div class="k-label">Variables</div><div class="k-value" id="r-variables">—</div><div class="k-sub">Gastado hasta hoy</div></div>
+          <div class="kpi"><div class="k-label">Monto libre</div><div class="k-value" id="r-libre">—</div><div class="k-sub">Estimado mes</div></div>
         </div>
-        <div class="prog-wrap">
-          <div class="prog-header"><span class="prog-label">Fondo Emergencia</span><span class="prog-nums" id="prog-fe-txt">— / 1.482€</span></div>
-          <div class="prog-bar"><div class="prog-fill" id="prog-fe" style="width:0%;background:var(--green)"></div></div>
-        </div>
-        <div class="prog-wrap">
-          <div class="prog-header"><span class="prog-label">Deuda Ramón</span><span class="prog-nums" id="prog-ramon-txt">— / 8.029$</span></div>
-          <div class="prog-bar"><div class="prog-fill" id="prog-ramon" style="width:0%;background:var(--amber)"></div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Distribución ingreso neto</div>
-        <div class="chart-container"><canvas id="donutChart"></canvas></div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
-          <span class="badge badge-purple">Sparplan 50€</span>
-          <span class="badge badge-blue">3-Zimmer 357€</span>
-          <span class="badge badge-green">FE 100€</span>
-          <span class="badge badge-red">Ramón 100€</span>
-          <span style="background:rgba(233,30,99,0.12);color:#E91E63;font-size:11px;font-weight:500;padding:3px 8px;border-radius:6px;font-family:var(--mono)">Sozialamt 393€ ⚡</span>
-          <span class="badge" style="background:rgba(154,154,175,0.12);color:var(--text2)">Fijos ~197€</span>
-          <span class="badge badge-amber">Variables ~245€</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="live-dot"></span>Sincronización</div>
-        <div class="row"><div class="row-label">Mes en curso</div><div class="row-value" id="r-mes">—</div></div>
-        <div class="row"><div class="row-label">Última sync</div><div class="badge badge-green" id="r-sync-time">—</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Hoja de ruta</div>
-        <div class="timeline">
-          <div class="tl-item">
-            <div class="tl-dot" style="background:var(--green)"></div>
-            <div class="tl-phase" style="color:var(--green)">✅ Completado</div>
-            <div class="tl-period">Mar – Abr 2026</div>
-            <div class="tl-desc">Arki liquidada · Sparplan 50€ · FE 100€ · Wohnungssparen 357€ activos</div>
+        <div class="card">
+          <div class="card-title">Estado de metas</div>
+          <div class="prog-wrap">
+            <div class="prog-header"><span class="prog-label">3-Zimmer Dresden</span><span class="prog-nums" id="prog-woh-txt">— / 2.300€</span></div>
+            <div class="prog-bar"><div class="prog-fill" id="prog-woh" style="width:0%;background:var(--blue)"></div></div>
           </div>
-          <div class="tl-item">
-            <div class="tl-dot" style="background:var(--amber)"></div>
-            <div class="tl-phase" style="color:var(--amber)">▶ Fase actual</div>
-            <div class="tl-period">Abr – Sep 2026</div>
-            <div class="tl-desc">Acumular 2.300€ para 3-Zimmer · Buscar desde May · Deuda Ramón 100€/mes</div>
+          <div class="prog-wrap">
+            <div class="prog-header"><span class="prog-label">Fondo Emergencia</span><span class="prog-nums" id="prog-fe-txt">— / 1.482€</span></div>
+            <div class="prog-bar"><div class="prog-fill" id="prog-fe" style="width:0%;background:var(--green)"></div></div>
           </div>
-          <div class="tl-item">
-            <div class="tl-dot" style="background:var(--blue)"></div>
-            <div class="tl-phase" style="color:var(--blue)">Meta Wohnung</div>
-            <div class="tl-period">Oct 2026</div>
-            <div class="tl-desc">3-Zimmer Löbtau/Plauen · Minijob vuelve al Sparplan → 460-500€/mes</div>
+          <div class="prog-wrap">
+            <div class="prog-header"><span class="prog-label">Deuda Ramón</span><span class="prog-nums" id="prog-ramon-txt">— / 8.029$</span></div>
+            <div class="prog-bar"><div class="prog-fill" id="prog-ramon" style="width:0%;background:var(--amber)"></div></div>
           </div>
-          <div class="tl-item">
-            <div class="tl-dot" style="background:var(--purple)"></div>
-            <div class="tl-phase" style="color:var(--purple)">Largo plazo</div>
-            <div class="tl-period">2027+</div>
-            <div class="tl-desc">FE completado · Sparplan 500€/mes · Steuererklärung → 600-1.200€</div>
+          <div class="prog-wrap">
+            <div class="prog-header"><span class="prog-label">Arki</span><span class="prog-nums">777 / 777€</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--green)"></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Distribución ingreso neto</div>
+          <div class="chart-container"><canvas id="donutChart"></canvas></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+            <span class="badge badge-purple">Sparplan 100€</span>
+            <span class="badge badge-blue">3-Zimmer 357€</span>
+            <span class="badge badge-green">FE 100€</span>
+            <span class="badge badge-red">Ramón 200€</span>
+            <span class="badge" style="background:rgba(154,154,175,0.12);color:var(--text2)">Fijos ~197€</span>
+            <span class="badge badge-amber">Variables ~245€</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="live-dot"></span>Sincronización</div>
+          <div class="row"><div class="row-label">Mes en curso</div><div class="row-value" id="r-mes">—</div></div>
+          <div class="row"><div class="row-label">Última sync</div><div class="badge badge-green" id="r-sync-time">—</div></div>
+          <div class="row"><div class="row-label">Arki</div><div class="badge badge-green">✅ Liquidada 4/4/2026</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Hoja de ruta</div>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--green)"></div>
+              <div class="tl-phase" style="color:var(--green)">✅ Completado</div>
+              <div class="tl-period">Mar – Abr 2026</div>
+              <div class="tl-desc">Arki liquidada · Sparplan 100€ · FE 100€ · Wohnungssparen 357€ activos</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--amber)"></div>
+              <div class="tl-phase" style="color:var(--amber)">▶ Fase actual</div>
+              <div class="tl-period">Abr – Sep 2026</div>
+              <div class="tl-desc">Acumular 2.300€ para 3-Zimmer · Buscar desde May · Deuda Ramón 200€/mes</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--blue)"></div>
+              <div class="tl-phase" style="color:var(--blue)">Meta Wohnung</div>
+              <div class="tl-period">Oct 2026</div>
+              <div class="tl-desc">3-Zimmer Löbtau/Plauen · Minijob vuelve al Sparplan → 460-500€/mes</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--purple)"></div>
+              <div class="tl-phase" style="color:var(--purple)">Largo plazo</div>
+              <div class="tl-period">2027+</div>
+              <div class="tl-desc">FE completado · Sparplan 500€/mes · Steuererklärung → 600-1.200€</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- GASTOS -->
+    <!-- ═══ GASTOS ═══ -->
     <div id="s-gastos" class="section">
       <div id="g-loading" class="loading-state"><div class="spinner"></div><span>Cargando gastos del Sheet...</span></div>
       <div id="g-error" class="error-box" style="display:none"></div>
@@ -293,7 +285,7 @@ html, body {
       </div>
     </div>
 
-    <!-- FLUJO -->
+    <!-- ═══ FLUJO ═══ -->
     <div id="s-flujo" class="section">
       <div class="card">
         <div class="card-title">Distribución día de cobro</div>
@@ -315,18 +307,18 @@ html, body {
         </div>
         <div class="flow-item">
           <div class="flow-icon" style="background:var(--purple-dim);color:var(--purple)">SP</div>
-          <div class="flow-body"><div class="flow-name">Sparplan VWCE <span style="font-size:10px;background:rgba(245,166,35,0.15);color:#F5A623;padding:2px 6px;border-radius:4px;font-family:var(--mono)">temporal</span></div><div class="flow-desc">Reducido hasta Oct 2026 · meta 500€/mes</div></div>
-          <div class="flow-amount" style="color:var(--purple)">−50€</div>
+          <div class="flow-body"><div class="flow-name">Sparplan VWCE</div><div class="flow-desc">Automático · no tocar hasta 2035+</div></div>
+          <div class="flow-amount" style="color:var(--purple)">−100€</div>
         </div>
         <div class="flow-item">
           <div class="flow-icon" style="background:var(--amber-dim);color:var(--amber)">D</div>
-          <div class="flow-body"><div class="flow-name">Deuda familiar (Ramón) <span style="font-size:10px;background:rgba(245,166,35,0.15);color:#F5A623;padding:2px 6px;border-radius:4px;font-family:var(--mono)">temporal</span></div><div class="flow-desc">Reducido · vuelve a 200€ en Oct 2026</div></div>
-          <div class="flow-amount" style="color:var(--amber)">−100€</div>
+          <div class="flow-body"><div class="flow-name">Deuda familiar (Ramón)</div><div class="flow-desc">Orden permanente · hasta Jun 2029</div></div>
+          <div class="flow-amount" style="color:var(--amber)">−200€</div>
         </div>
-        <div class="flow-item" style="border-style:dashed;border-color:rgba(233,30,99,0.5)">
-          <div class="flow-icon" style="background:rgba(233,30,99,0.12);color:#E91E63">SZ</div>
-          <div class="flow-body"><div class="flow-name">Alquiler Sozialamt <span style="font-size:10px;background:rgba(233,30,99,0.15);color:#E91E63;padding:2px 6px;border-radius:4px;font-family:var(--mono)">nuevo</span></div><div class="flow-desc">Pago mes vencido · hasta mudanza Oct 2026</div></div>
-          <div class="flow-amount" style="color:#E91E63">−393€</div>
+        <div class="flow-item">
+          <div class="flow-icon" style="background:var(--surface3);color:var(--green)">✓</div>
+          <div class="flow-body"><div class="flow-name">Arki <span class="badge badge-green" style="font-size:10px">✅ liquidada</span></div><div class="flow-desc">Pagada el 4/4/2026</div></div>
+          <div class="flow-amount" style="color:var(--green)">0€</div>
         </div>
         <div class="flow-divider"></div>
         <div class="flow-item" style="background:var(--surface3);border-color:var(--border2)">
@@ -344,7 +336,7 @@ html, body {
       </div>
     </div>
 
-    <!-- WOHNUNG -->
+    <!-- ═══ WOHNUNG ═══ -->
     <div id="s-wohnung" class="section">
       <div class="kpi-grid">
         <div class="kpi blue"><div class="k-label">Tu Warmmiete</div><div class="k-value">465€</div><div class="k-sub">50% · Löbtau/Plauen</div></div>
@@ -357,6 +349,11 @@ html, body {
         <div class="prog-wrap">
           <div class="prog-header"><span class="prog-label">3-Zimmer Dresden</span><span class="prog-nums" id="woh-prog-txt">— / 2.300€</span></div>
           <div class="prog-bar"><div class="prog-fill" id="woh-prog" style="width:0%;background:var(--blue)"></div></div>
+        </div>
+        <div style="margin-top:14px">
+          <div class="row"><div class="row-label">Mar 2026 ✅</div><div class="row-value green">357,50€</div></div>
+          <div class="row"><div class="row-label">Abr 2026 (en curso)</div><div class="row-value amber">357,50€</div></div>
+          <div class="row"><div class="row-label">Restante para meta</div><div class="row-value" id="woh-restante">—</div></div>
         </div>
       </div>
       <div class="section-label">Comparativa zonas</div>
@@ -394,9 +391,11 @@ html, body {
       </div>
     </div>
 
-    <!-- METAS -->
+    <!-- ═══ METAS ═══ -->
     <div id="s-metas" class="section">
       <div class="section-label">Ahorro activo</div>
+
+      <!-- FE — datos reales del GAS -->
       <div class="card">
         <div class="card-title">Fondo de emergencia <span id="fe-live-badge" class="badge badge-green" style="display:none;font-size:10px">live</span></div>
         <div class="prog-wrap" style="margin-bottom:16px">
@@ -422,6 +421,8 @@ html, body {
       </div>
 
       <div class="section-label">Deudas</div>
+
+      <!-- RAMÓN — datos reales del GAS -->
       <div class="card">
         <div class="card-title">Deuda Familiar — Ramón <span class="badge badge-blue" style="font-size:10px">live</span></div>
         <div id="ramon-loading" class="loading-state" style="padding:20px"><div class="spinner"></div></div>
@@ -437,6 +438,8 @@ html, body {
           <div class="row"><div class="row-label">Pago mensual</div><div class="row-value amber">200€/mes</div></div>
           <div class="row"><div class="row-label">Meses restantes estimados</div><div class="row-value" id="ramon-meses">—</div></div>
           <div class="row"><div class="row-label">Sin interés</div><div class="badge badge-green">✅ Confirmado</div></div>
+
+          <!-- Historial de pagos -->
           <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
             <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Historial de pagos</div>
             <div id="ramon-historial"></div>
@@ -444,6 +447,11 @@ html, body {
         </div>
         <div id="ramon-error" class="error-box" style="display:none"></div>
       </div>
+
+      <div class="card">
+        <div class="row"><div class="row-label">Arki<small>pagada 4/4/2026</small></div><div class="badge badge-green">✅ Liquidada</div></div>
+      </div>
+
       <div class="section-label">Steuererklärung 2026</div>
       <div class="card">
         <div class="row"><div class="row-label">Obligada por</div><div class="row-value">2 empleadores</div></div>
@@ -454,7 +462,7 @@ html, body {
       </div>
     </div>
 
-    <!-- HISTORIAL -->
+    <!-- ═══ HISTORIAL ═══ -->
     <div id="s-historial" class="section">
       <div id="hist-loading" class="loading-state"><div class="spinner"></div><span>Cargando historial...</span></div>
       <div id="hist-error" class="error-box" style="display:none"></div>
@@ -470,7 +478,7 @@ html, body {
       </div>
     </div>
 
-    <!-- SPARPLAN -->
+    <!-- ═══ SPARPLAN ═══ -->
     <div id="s-sparplan" class="section">
       <div class="card">
         <div class="card-title">Calculadora VWCE — 7% anual</div>
@@ -513,7 +521,7 @@ html, body {
       </div>
     </div>
 
-    <!-- CUENTAS -->
+    <!-- ═══ CUENTAS ═══ -->
     <div id="s-cuentas" class="section">
       <div class="acc-card" style="border-color:rgba(91,142,255,0.3)">
         <div class="acc-header" style="background:rgba(91,142,255,0.06)">
@@ -557,11 +565,13 @@ html, body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
+// ═══ CONFIG ═══
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbyXnl21oTc2yYTV6Z-xpW3bGV_yl7UR_7q9jue92_42buyvWMLmPaosR7cB6fE2IMl2EQ/exec';
 const META_WOH   = 2300;
 const META_FE    = 1482;
 const META_RAMON = 8029.59;
 
+// ═══ UTILS ═══
 const fmtE  = (n,d=0) => isNaN(n)?'—':n.toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d})+'€';
 const fmtD  = (n,d=0) => isNaN(n)?'—':n.toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d})+'$';
 const setEl = (id,v)  => { const e=document.getElementById(id); if(e) e.textContent=v; };
@@ -571,6 +581,7 @@ const show2 = (id,s)  => { const e=document.getElementById(id); if(e) e.style.di
 document.getElementById('live-date').textContent =
   new Date().toLocaleDateString('es-DE',{day:'2-digit',month:'short',year:'2-digit'});
 
+// ═══ NAV ═══
 let donutInst=null, spInst=null;
 function show(id,btn) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -581,9 +592,10 @@ function show(id,btn) {
   if(id==='sparplan') setTimeout(updateSparplan,50);
 }
 
+// ═══ CATEGORIES ═══
 const CAT_METAS = {
-  'Comida':200,'Hogar/Aseo':40,'Farmacia':15,
-  'Ocio/Social':40,'Ropa':40,'Trámites':0,
+  'Comida':150,'Hogar/Aseo':40,'Farmacia':15,
+  'Ocio/Social':40,'Ropa':20,'Trámites':0,
   'Extras':0,'Familia/Regalos':0,'Otros':0
 };
 const CAT_COLORS = {
@@ -591,9 +603,9 @@ const CAT_COLORS = {
   'Ocio/Social':'#F5A623','Extras':'#FF5E5E','Ropa':'#FF8C42',
   'Trámites':'#E91E63','Familia/Regalos':'#26C6DA','Otros':'#5A5A6E'
 };
-
 function categorize(item) {
   const s = (item || '').toLowerCase().trim();
+  // Coincidencia exacta con nombres del desplegable de tu Sheet
   if (s === 'comida' || s === 'comida arki')        return 'Comida';
   if (s === 'hogar y aseo')                          return 'Hogar/Aseo';
   if (s === 'farmacia y salud')                      return 'Farmacia';
@@ -602,7 +614,7 @@ function categorize(item) {
   if (s === 'sozialamt')                             return 'Trámites';
   if (s === 'besucht bei arki' || s === 'extras')    return 'Extras';
   if (s === 'regalos a mi familia')                  return 'Familia/Regalos';
-  
+  // Fallback por palabras clave
   if (/comida|rewe|lidl|aldi/.test(s))               return 'Comida';
   if (/aseo|hogar|peluq|uña|nail/.test(s))           return 'Hogar/Aseo';
   if (/farmacia|medic|salud/.test(s))                return 'Farmacia';
@@ -614,6 +626,7 @@ function categorize(item) {
   return 'Otros';
 }
 
+// ═══ FETCH ═══
 async function fetchGAS(action) {
   const res = await fetch(`${GAS_URL}?action=${action}&t=${Date.now()}`);
   if(!res.ok) throw new Error('HTTP '+res.status);
@@ -622,24 +635,18 @@ async function fetchGAS(action) {
   catch(e) { throw new Error('Respuesta inválida'); }
 }
 
-async function loadWohnung() {
-  const wohAcum = 0;
-  setEl('woh-acum', fmtE(wohAcum));
-  setEl('woh-prog-txt', fmtE(wohAcum)+' / '+fmtE(META_WOH));
-  setW('woh-prog', (wohAcum/META_WOH)*100);
-  setEl('prog-woh-txt', fmtE(wohAcum)+' / '+fmtE(META_WOH));
-  setW('prog-woh', (wohAcum/META_WOH)*100);
-}
-
+// ═══ LOAD GASTOS ═══
 async function loadGastos() {
   show2('r-loading',true); show2('r-content',false); show2('r-error',false);
   show2('g-loading',true); show2('g-content',false); show2('g-error',false);
   try {
     const d = await fetchGAS('gastos');
+    // KPIs Resumen
     setEl('r-ingreso',   fmtE(d.ingreso));
     setEl('r-fijos',     fmtE(d.totalFijos));
     setEl('r-variables', fmtE(d.totalVariables));
     setEl('r-libre',     fmtE(d.montoLibre));
+    // KPIs pestaña Gastos
     setEl('g-tot-var',   fmtE(d.totalVariables, 2));
     setEl('g-tot-fij',   fmtE(d.totalFijos, 2));
     setEl('r-mes',       d.mes+' 2026');
@@ -647,8 +654,16 @@ async function loadGastos() {
     setEl('fl-ingreso',  '+'+fmtE(d.ingreso));
     setEl('fl-resto',    '~'+fmtE(d.montoLibre));
 
-    await loadWohnung();
+    // Wohnung acumulado (minijob × meses desde Mar)
+    const wohAcum = 357.5; // Mar confirmado — Apr en curso
+    setEl('woh-acum', fmtE(wohAcum));
+    setEl('woh-prog-txt', fmtE(wohAcum)+' / '+fmtE(META_WOH));
+    setW('woh-prog', (wohAcum/META_WOH)*100);
+    setEl('woh-restante', fmtE(META_WOH-wohAcum));
+    setEl('prog-woh-txt', fmtE(wohAcum)+' / '+fmtE(META_WOH));
+    setW('prog-woh', (wohAcum/META_WOH)*100);
 
+    // Cat bars con semáforos
     const cats = {};
     (d.variables||[]).forEach(g => {
       const c=categorize(g.item);
@@ -671,6 +686,7 @@ async function loadGastos() {
         </div>`;
       }).join('');
 
+    // Fijos
     document.getElementById('fijos-list').innerHTML =
       (d.fijos||[]).map(f=>`
         <div class="row">
@@ -678,6 +694,7 @@ async function loadGastos() {
           <div class="row-value">${fmtE(f.monto,2)}</div>
         </div>`).join('');
 
+    // Variables detalle
     document.getElementById('gastos-detalle').innerHTML =
       (d.variables||[]).map(g=>`
         <div class="gasto-item">
@@ -697,25 +714,29 @@ async function loadGastos() {
   }
 }
 
+// ═══ LOAD FONDO EMERGENCIA ═══
 async function loadFE() {
   try {
     const fe = await fetchGAS('getFondoEmergencia');
     if(fe.error) return;
     const saldo = fe.saldoReal||0;
     const pct   = Math.min(saldo/META_FE,1)*100;
-    
+    // Resumen
     setEl('prog-fe-txt', fmtE(saldo,2)+' / '+fmtE(META_FE));
     setW('prog-fe', pct);
+    // Metas
     setEl('fe-saldo',    fmtE(saldo,2));
     setEl('fe-prog-txt', fmtE(saldo,2)+' / '+fmtE(META_FE));
     setW('fe-prog-fill', pct);
     setEl('fe-restante', fmtE(fe.restante3m||0,2));
     setEl('fe-meses',    (fe.mesesRestantes||'—')+' meses');
     show2('fe-live-badge',true);
+    // Cuentas
     setEl('cuentas-fe', fmtE(saldo,2)+' / '+fmtE(META_FE));
-  } catch(e) { }
+  } catch(e) { /* silent fail */ }
 }
 
+// ═══ LOAD RAMÓN ═══
 async function loadRamon() {
   show2('ramon-loading',true);
   show2('ramon-content',false);
@@ -725,9 +746,11 @@ async function loadRamon() {
     if(r.error) throw new Error(r.error);
 
     const pagadoPct = r.pagadoPct||0;
+    // Resumen progress
     setEl('prog-ramon-txt', fmtD(r.totalPagadoUSD,2)+' / '+fmtD(r.deudaOriginalUSD,2));
     setW('prog-ramon', pagadoPct);
 
+    // Metas card
     setEl('ramon-saldo', fmtD(r.saldoRestanteUSD,2));
     setEl('ramon-eur',   fmtE(r.totalPagadoEUR,2));
     setEl('ramon-usd',   fmtD(r.totalPagadoUSD,2));
@@ -735,6 +758,7 @@ async function loadRamon() {
     setEl('ramon-prog-txt', fmtD(r.totalPagadoUSD,2)+' pagados / '+fmtD(r.deudaOriginalUSD,2));
     setW('ramon-prog-fill', pagadoPct);
 
+    // Historial de pagos
     const hist = r.historial||[];
     document.getElementById('ramon-historial').innerHTML = hist.length===0
       ? '<div style="color:var(--text3);font-size:13px;text-align:center;padding:12px">Sin pagos registrados aún</div>'
@@ -758,6 +782,7 @@ async function loadRamon() {
   }
 }
 
+// ═══ LOAD HISTORIAL ═══
 async function loadHistorial() {
   show2('hist-loading',true);
   show2('hist-content',false);
@@ -771,8 +796,10 @@ async function loadHistorial() {
       return;
     }
 
+    // Filtra fila PROMEDIO/TOTAL si viene
     const meses = data.filter(m=>m.mes && !m.mes.includes('PROMEDIO') && !m.mes.includes('TOTAL'));
 
+    // Resumen
     const count  = meses.length;
     const ingProm= meses.reduce((a,m)=>a+(m.ingReal||0),0)/count;
     const ahoProm= meses.reduce((a,m)=>a+(m.ahorro||0),0)/count;
@@ -783,6 +810,7 @@ async function loadHistorial() {
     setEl('hist-aho-prom',    fmtE(ahoProm,2));
     setEl('hist-tar-prom',    tarProm.toFixed(1)+'%');
 
+    // Items
     document.getElementById('hist-items').innerHTML = meses.map(m=>{
       const tar    = m.tarReal||0;
       const tarObj = m.tarObj||49.7;
@@ -841,6 +869,7 @@ async function loadHistorial() {
   }
 }
 
+// ═══ SYNC ALL ═══
 async function syncAll() {
   const btn=document.getElementById('sync-btn');
   btn.textContent='↻ Sync...'; btn.className='sync-btn syncing';
@@ -853,6 +882,7 @@ async function syncAll() {
   setTimeout(()=>{ btn.textContent='↻ Sync'; btn.className='sync-btn'; },3000);
 }
 
+// ═══ DONUT ═══
 function initDonut() {
   const canvas=document.getElementById('donutChart');
   if(!canvas) return;
@@ -860,10 +890,10 @@ function initDonut() {
   donutInst=new Chart(canvas,{
     type:'doughnut',
     data:{
-      labels:['Sparplan','3-Zimmer','FE','Ramón','Sozialamt','Fijos','Variables'],
+      labels:['Sparplan','3-Zimmer','FE','Ramón','Fijos','Variables'],
       datasets:[{
-        data:[50,357,100,100,393,197,245],
-        backgroundColor:['#A78BFA','#5B8EFF','#2ECC8A','#F5A623','#E91E63','rgba(154,154,175,0.5)','#FF5E5E'],
+        data:[100,357,100,200,197,245],
+        backgroundColor:['#A78BFA','#5B8EFF','#2ECC8A','#F5A623','rgba(154,154,175,0.5)','#FF5E5E'],
         borderWidth:0,hoverOffset:4
       }]
     },
@@ -877,6 +907,7 @@ function initDonut() {
   });
 }
 
+// ═══ SPARPLAN ═══
 function updateSparplan() {
   const m=parseInt(document.getElementById('sp-range').value);
   const y=parseInt(document.getElementById('yr-range').value);
@@ -912,6 +943,7 @@ function updateSparplan() {
   });
 }
 
+// ═══ INIT ═══
 loadGastos();
 loadFE();
 loadRamon();
