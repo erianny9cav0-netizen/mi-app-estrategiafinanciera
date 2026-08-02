@@ -23,9 +23,19 @@
   --font:'DM Sans',sans-serif; --mono:'DM Mono',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px}  
-@media(min-width:768px){html,body{overflow:auto}.app{height:auto;min-height:100vh}.content{overflow:visible;flex:none}}
-.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  overflow-x: hidden;
+}
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 .header{padding:14px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg)}
 .header-left .greeting{font-size:11px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;font-weight:500}
 .header-left .name{font-size:20px;font-weight:600;color:var(--text);line-height:1.2}
@@ -40,9 +50,11 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
 .nav-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:13px;font-family:var(--font);font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
 .nav-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 .nav-btn:active{transform:scale(.96)}
-.content{flex:1;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:16px;scrollbar-width:thin;scrollbar-color:var(--surface3) transparent}
-.content::-webkit-scrollbar{width:3px}
-.content::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
+.content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
 .section{display:none;animation:fadeIn .2s ease}
 .section.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
@@ -136,7 +148,6 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
 .error-box{background:var(--red-dim);border:1px solid rgba(255,94,94,0.2);border-radius:var(--r-sm);padding:12px 14px;font-size:13px;color:var(--red);margin-bottom:12px;line-height:1.5}
 .live-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:5px;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-/* HISTORIAL */
 .hist-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:8px}
 .hist-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .hist-mes{font-size:13px;font-weight:600;color:var(--text)}
@@ -147,7 +158,6 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
 .hist-tar{display:flex;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
 .hist-tar-bar{flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;margin:0 10px}
 .hist-tar-fill{height:100%;border-radius:2px}
-/* PAGO RAMON */
 .pago-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
 .pago-item:last-child{border-bottom:none}
 .pago-fecha{font-size:12px;color:var(--text3);margin-top:2px}
@@ -182,7 +192,7 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
 
   <div class="content">
 
-    <!-- ═══ RESUMEN ═══ -->
+    <!-- RESUMEN -->
     <div id="s-resumen" class="section active">
       <div id="r-loading" class="loading-state"><div class="spinner"></div><span>Cargando datos...</span></div>
       <div id="r-error" class="error-box" style="display:none"></div>
@@ -259,7 +269,7 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
       </div>
     </div>
 
-    <!-- ═══ GASTOS ═══ -->
+    <!-- GASTOS -->
     <div id="s-gastos" class="section">
       <div id="g-loading" class="loading-state"><div class="spinner"></div><span>Cargando gastos del Sheet...</span></div>
       <div id="g-error" class="error-box" style="display:none"></div>
@@ -283,7 +293,7 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
       </div>
     </div>
 
-    <!-- ═══ FLUJO ═══ -->
+    <!-- FLUJO -->
     <div id="s-flujo" class="section">
       <div class="card">
         <div class="card-title">Distribución día de cobro</div>
@@ -334,7 +344,7 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
       </div>
     </div>
 
-    <!-- ═══ WOHNUNG ═══ -->
+    <!-- WOHNUNG -->
     <div id="s-wohnung" class="section">
       <div class="kpi-grid">
         <div class="kpi blue"><div class="k-label">Tu Warmmiete</div><div class="k-value">465€</div><div class="k-sub">50% · Löbtau/Plauen</div></div>
@@ -347,9 +357,6 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
         <div class="prog-wrap">
           <div class="prog-header"><span class="prog-label">3-Zimmer Dresden</span><span class="prog-nums" id="woh-prog-txt">— / 2.300€</span></div>
           <div class="prog-bar"><div class="prog-fill" id="woh-prog" style="width:0%;background:var(--blue)"></div></div>
-        </div>
-        <div style="margin-top:14px" id="woh-historial">
-          <div style="color:var(--text3);font-size:13px;text-align:center;padding:12px">Cargando...</div>
         </div>
       </div>
       <div class="section-label">Comparativa zonas</div>
@@ -387,11 +394,9 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
       </div>
     </div>
 
-    <!-- ═══ METAS ═══ -->
+    <!-- METAS -->
     <div id="s-metas" class="section">
       <div class="section-label">Ahorro activo</div>
-
-      <!-- FE — datos reales del GAS -->
       <div class="card">
         <div class="card-title">Fondo de emergencia <span id="fe-live-badge" class="badge badge-green" style="display:none;font-size:10px">live</span></div>
         <div class="prog-wrap" style="margin-bottom:16px">
@@ -417,8 +422,6 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
       </div>
 
       <div class="section-label">Deudas</div>
-
-      <!-- RAMÓN — datos reales del GAS -->
       <div class="card">
         <div class="card-title">Deuda Familiar — Ramón <span class="badge badge-blue" style="font-size:10px">live</span></div>
         <div id="ramon-loading" class="loading-state" style="padding:20px"><div class="spinner"></div></div>
@@ -434,8 +437,6 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
           <div class="row"><div class="row-label">Pago mensual</div><div class="row-value amber">200€/mes</div></div>
           <div class="row"><div class="row-label">Meses restantes estimados</div><div class="row-value" id="ramon-meses">—</div></div>
           <div class="row"><div class="row-label">Sin interés</div><div class="badge badge-green">✅ Confirmado</div></div>
-
-          <!-- Historial de pagos -->
           <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
             <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Historial de pagos</div>
             <div id="ramon-historial"></div>
@@ -453,7 +454,7 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
       </div>
     </div>
 
-    <!-- ═══ HISTORIAL ═══ -->
+    <!-- HISTORIAL -->
     <div id="s-historial" class="section">
       <div id="hist-loading" class="loading-state"><div class="spinner"></div><span>Cargando historial...</span></div>
       <div id="hist-error" class="error-box" style="display:none"></div>
@@ -469,7 +470,7 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
       </div>
     </div>
 
-    <!-- ═══ SPARPLAN ═══ -->
+    <!-- SPARPLAN -->
     <div id="s-sparplan" class="section">
       <div class="card">
         <div class="card-title">Calculadora VWCE — 7% anual</div>
@@ -512,7 +513,7 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
       </div>
     </div>
 
-    <!-- ═══ CUENTAS ═══ -->
+    <!-- CUENTAS -->
     <div id="s-cuentas" class="section">
       <div class="acc-card" style="border-color:rgba(91,142,255,0.3)">
         <div class="acc-header" style="background:rgba(91,142,255,0.06)">
@@ -556,13 +557,11 @@ html{height:100%}body{height:100%;background:var(--bg);color:var(--text);font-fa
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-// ═══ CONFIG ═══
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbyXnl21oTc2yYTV6Z-xpW3bGV_yl7UR_7q9jue92_42buyvWMLmPaosR7cB6fE2IMl2EQ/exec';
 const META_WOH   = 2300;
 const META_FE    = 1482;
 const META_RAMON = 8029.59;
 
-// ═══ UTILS ═══
 const fmtE  = (n,d=0) => isNaN(n)?'—':n.toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d})+'€';
 const fmtD  = (n,d=0) => isNaN(n)?'—':n.toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d})+'$';
 const setEl = (id,v)  => { const e=document.getElementById(id); if(e) e.textContent=v; };
@@ -572,7 +571,6 @@ const show2 = (id,s)  => { const e=document.getElementById(id); if(e) e.style.di
 document.getElementById('live-date').textContent =
   new Date().toLocaleDateString('es-DE',{day:'2-digit',month:'short',year:'2-digit'});
 
-// ═══ NAV ═══
 let donutInst=null, spInst=null;
 function show(id,btn) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -583,7 +581,6 @@ function show(id,btn) {
   if(id==='sparplan') setTimeout(updateSparplan,50);
 }
 
-// ═══ CATEGORIES ═══
 const CAT_METAS = {
   'Comida':200,'Hogar/Aseo':40,'Farmacia':15,
   'Ocio/Social':40,'Ropa':40,'Trámites':0,
@@ -594,6 +591,7 @@ const CAT_COLORS = {
   'Ocio/Social':'#F5A623','Extras':'#FF5E5E','Ropa':'#FF8C42',
   'Trámites':'#E91E63','Familia/Regalos':'#26C6DA','Otros':'#5A5A6E'
 };
+
 function categorize(item) {
   const s = (item || '').toLowerCase().trim();
   if (s === 'comida' || s === 'comida arki')        return 'Comida';
@@ -616,7 +614,6 @@ function categorize(item) {
   return 'Otros';
 }
 
-// ═══ FETCH ═══
 async function fetchGAS(action) {
   const res = await fetch(`${GAS_URL}?action=${action}&t=${Date.now()}`);
   if(!res.ok) throw new Error('HTTP '+res.status);
@@ -625,9 +622,8 @@ async function fetchGAS(action) {
   catch(e) { throw new Error('Respuesta inválida'); }
 }
 
-// ═══ LOAD WOHNUNG ═══
 async function loadWohnung() {
-  const wohAcum = 0; // Ajusta este valor o conéctalo con tu backend
+  const wohAcum = 0;
   setEl('woh-acum', fmtE(wohAcum));
   setEl('woh-prog-txt', fmtE(wohAcum)+' / '+fmtE(META_WOH));
   setW('woh-prog', (wohAcum/META_WOH)*100);
@@ -635,7 +631,6 @@ async function loadWohnung() {
   setW('prog-woh', (wohAcum/META_WOH)*100);
 }
 
-// ═══ LOAD GASTOS ═══
 async function loadGastos() {
   show2('r-loading',true); show2('r-content',false); show2('r-error',false);
   show2('g-loading',true); show2('g-content',false); show2('g-error',false);
@@ -702,7 +697,6 @@ async function loadGastos() {
   }
 }
 
-// ═══ LOAD FONDO EMERGENCIA ═══
 async function loadFE() {
   try {
     const fe = await fetchGAS('getFondoEmergencia');
@@ -719,10 +713,9 @@ async function loadFE() {
     setEl('fe-meses',    (fe.mesesRestantes||'—')+' meses');
     show2('fe-live-badge',true);
     setEl('cuentas-fe', fmtE(saldo,2)+' / '+fmtE(META_FE));
-  } catch(e) { /* silent fail */ }
+  } catch(e) { }
 }
 
-// ═══ LOAD RAMÓN ═══
 async function loadRamon() {
   show2('ramon-loading',true);
   show2('ramon-content',false);
@@ -765,7 +758,6 @@ async function loadRamon() {
   }
 }
 
-// ═══ LOAD HISTORIAL ═══
 async function loadHistorial() {
   show2('hist-loading',true);
   show2('hist-content',false);
@@ -849,7 +841,6 @@ async function loadHistorial() {
   }
 }
 
-// ═══ SYNC ALL ═══
 async function syncAll() {
   const btn=document.getElementById('sync-btn');
   btn.textContent='↻ Sync...'; btn.className='sync-btn syncing';
@@ -862,7 +853,6 @@ async function syncAll() {
   setTimeout(()=>{ btn.textContent='↻ Sync'; btn.className='sync-btn'; },3000);
 }
 
-// ═══ DONUT ═══
 function initDonut() {
   const canvas=document.getElementById('donutChart');
   if(!canvas) return;
@@ -887,7 +877,6 @@ function initDonut() {
   });
 }
 
-// ═══ SPARPLAN ═══
 function updateSparplan() {
   const m=parseInt(document.getElementById('sp-range').value);
   const y=parseInt(document.getElementById('yr-range').value);
@@ -923,7 +912,6 @@ function updateSparplan() {
   });
 }
 
-// ═══ INIT ═══
 loadGastos();
 loadFE();
 loadRamon();
