@@ -199,7 +199,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
             <div class="prog-bar"><div class="prog-fill" id="prog-woh" style="width:0%;background:var(--blue)"></div></div>
           </div>
           <div class="prog-wrap">
-            <div class="prog-header"><span class="prog-label">Fondo Emergencia</span><span class="prog-nums" id="prog-fe-txt">— / 1.482€</span></div>
+            <div class="prog-header"><span class="prog-label">Fondo de Abundancia</span><span class="prog-nums" id="prog-fe-txt">— / 1.482€</span></div>
             <div class="prog-bar"><div class="prog-fill" id="prog-fe" style="width:0%;background:var(--green)"></div></div>
           </div>
           <div class="prog-wrap">
@@ -299,7 +299,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         </div>
         <div class="flow-item">
           <div class="flow-icon" style="background:var(--green-dim);color:var(--green)">TR</div>
-          <div class="flow-body"><div class="flow-name">Trade Republic — Tagesgeld</div><div class="flow-desc">Fondo emergencia · ~4% interés</div></div>
+          <div class="flow-body"><div class="flow-name">Trade Republic — Tagesgeld</div><div class="flow-desc">Fondo de Abundancia · ~4% interés</div></div>
           <div class="flow-amount" style="color:var(--green)">−100€</div>
         </div>
         <div class="flow-item">
@@ -312,8 +312,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
           <div class="flow-body"><div class="flow-name">Deuda familiar (Ramón)</div><div class="flow-desc">Orden permanente · hasta Jun 2029</div></div>
           <div class="flow-amount" style="color:var(--amber)">−200€</div>
         </div>
+        <div class="flow-item">
 
-        <div class="flow-divider"></div>
         <div class="flow-item" style="background:var(--surface3);border-color:var(--border2)">
           <div class="flow-icon" style="background:var(--border);color:var(--text2)">=</div>
           <div class="flow-body"><div class="flow-name">Resto en Sparkasse</div><div class="flow-desc">Fijos restantes + variables</div></div>
@@ -343,12 +343,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
           <div class="prog-header"><span class="prog-label">3-Zimmer Dresden</span><span class="prog-nums" id="woh-prog-txt">— / 2.300€</span></div>
           <div class="prog-bar"><div class="prog-fill" id="woh-prog" style="width:0%;background:var(--blue)"></div></div>
         </div>
+        <div style="margin-top:14px">
         <div style="margin-top:14px" id="woh-historial">
-          <div style="color:var(--text3);font-size:13px;text-align:center;padding:12px">Cargando...</div>
+          <div style="color:var(--text3);font-size:13px;text-align:center;padding:12px">Sincronizando...</div>
         </div>
-        <div class="row" style="margin-top:8px">
-          <div class="row-label">Restante para meta</div>
-          <div class="row-value amber" id="woh-restante">—</div>
+          <div class="row"><div class="row-label">Restante para meta</div><div class="row-value" id="woh-restante">—</div></div>
         </div>
       </div>
       <div class="section-label">Comparativa zonas</div>
@@ -392,7 +391,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 
       <!-- FE — datos reales del GAS -->
       <div class="card">
-        <div class="card-title">Fondo de emergencia <span id="fe-live-badge" class="badge badge-green" style="display:none;font-size:10px">live</span></div>
+        <div class="card-title">Fondo de Abundancia <span id="fe-live-badge" class="badge badge-green" style="display:none;font-size:10px">live</span></div>
         <div class="prog-wrap" style="margin-bottom:16px">
           <div class="prog-header"><span class="prog-label">Progreso real</span><span class="prog-nums" id="fe-prog-txt">— / 1.482€</span></div>
           <div class="prog-bar"><div class="prog-fill" id="fe-prog-fill" style="width:0%;background:var(--green)"></div></div>
@@ -506,13 +505,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         <div class="row"><div class="row-label">Freistellungsauftrag</div><div class="badge badge-purple">1.000€/año</div></div>
       </div>
       <div class="card">
-        <div class="card-title">Saldo real invertido <span class="badge badge-blue" style="font-size:10px">live</span></div>
-        <div class="row"><div class="row-label">Último mes registrado</div><div class="row-value blue" id="sp-mes-real">—</div></div>
-        <div class="row"><div class="row-label">Saldo transferido acumulado</div><div class="row-value green" id="sp-saldo-real">—</div></div>
-      </div>
-      <div class="card">
         <div class="card-title">Plan por fases</div>
-        <div class="row"><div class="row-label">May–Sep 2026<small>temporal · Sozialamt activo</small></div><div class="row-value amber">50€/mes</div></div>
+        <div class="row"><div class="row-label">Ahora (Abr 2026)<small>activo</small></div><div class="row-value green">100€/mes</div></div>
         <div class="row"><div class="row-label">Oct 2026+ — mudanza<small>minijob liberado</small></div><div class="row-value blue">460-500€/mes</div></div>
         <div class="row"><div class="row-label">2027+ — FE completado</div><div class="row-value purple">500€+/mes</div></div>
       </div>
@@ -545,10 +539,10 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <div class="acc-card" style="border-color:rgba(167,139,250,0.3)">
         <div class="acc-header" style="background:rgba(167,139,250,0.06)">
           <div class="acc-avatar" style="background:var(--purple-dim);color:var(--purple)">TR</div>
-          <div class="acc-info"><div class="acc-name">Trade Republic</div><div class="acc-role">Inversión + Fondo emergencia</div></div>
+          <div class="acc-info"><div class="acc-name">Trade Republic</div><div class="acc-role">Inversión + Fondo de Abundancia</div></div>
         </div>
         <div class="acc-body">
-          <div class="row"><div class="row-label">Tagesgeld (FE)<small>100€/mes · ~4%</small></div><div class="row-value green" id="cuentas-fe">— / 1.482€</div></div>
+          <div class="row"><div class="row-label">Tagesgeld (Abundancia)<small>100€/mes · ~4%</small></div><div class="row-value green" id="cuentas-fe">— / 1.482€</div></div>
           <div class="row"><div class="row-label">Sparplan VWCE<small>100€/mes · automatizado</small></div><div class="row-value purple">activo</div></div>
           <div class="row"><div class="row-label">Freistellungsauftrag</div><div class="badge badge-purple">1.000€/año</div></div>
           <div class="row"><div class="row-label">Regla</div><div class="badge badge-green">No tocar hasta 2035+</div></div>
@@ -651,8 +645,7 @@ async function loadGastos() {
     setEl('fl-ingreso',  '+'+fmtE(d.ingreso));
     setEl('fl-resto',    '~'+fmtE(d.montoLibre));
 
-    // Wohnung acumulado (minijob × meses desde Mar)
-    // Wohnung cargado por loadWohnung() en tiempo real
+    // Wohnung se carga en tiempo real desde loadWohnung()
 
     // Cat bars con semáforos
     const cats = {};
@@ -705,7 +698,7 @@ async function loadGastos() {
   }
 }
 
-// ═══ LOAD FONDO EMERGENCIA ═══
+// ═══ LOAD FONDO DE ABUNDANCIA ═══
 async function loadFE() {
   try {
     const fe = await fetchGAS('getFondoEmergencia');
@@ -860,45 +853,56 @@ async function loadHistorial() {
   }
 }
 
-// ═══ SYNC ALL ═══
+// ═══ WOHNUNG LIVE ═══
 async function loadWohnung() {
   try {
     const w = await fetchGAS('estrategia');
     if (!w || w.wohnungAcum === undefined) return;
     const acum = w.wohnungAcum || 0;
-    const pct  = Math.min(acum / META_WOH, 1) * 100;
-    setEl('woh-acum',     fmtE(acum));
-    setEl('woh-prog-txt', fmtE(acum) + ' / ' + fmtE(META_WOH));
-    setW('woh-prog',      pct);
-    setEl('woh-restante', fmtE(Math.max(META_WOH - acum, 0)));
-    setEl('prog-woh-txt', fmtE(acum) + ' / ' + fmtE(META_WOH));
-    setW('prog-woh',      pct);
+    const meta = 2300;
+    const pct  = Math.min(acum / meta, 1) * 100;
+    // KPI
+    setEl('woh-acum', fmtE(acum));
+    // Resumen barra
+    setEl('prog-woh-txt', fmtE(acum) + ' / ' + fmtE(meta));
+    setW('prog-woh', pct);
+    // Wohnung tab barra
+    setEl('woh-prog-txt', fmtE(acum) + ' / ' + fmtE(meta));
+    setW('woh-prog', pct);
+    setEl('woh-restante', fmtE(Math.max(meta - acum, 0)));
+    // Historial dinámico
     const container = document.getElementById('woh-historial');
     if (container && w.wohnungMeses && w.wohnungMeses.length > 0) {
       const mesesReales = w.wohnungMeses.filter(m => m.monto > 0);
-      container.innerHTML = mesesReales.map(m => {
-        const esAhorrado = m.estado && m.estado.includes('ahorrado') && !m.estado.includes('ahorrando');
-        return `<div class="row">
-          <div class="row-label">Mes ${m.mes}</div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="row-value ${esAhorrado ? 'green' : 'amber'}">${fmtE(m.monto)}</div>
-            <span class="badge ${esAhorrado ? 'badge-green' : 'badge-amber'}">${esAhorrado ? '✅ ahorrado' : '⏳ ahorrando'}</span>
-          </div>
-        </div>`;
-      }).join('');
+      if (mesesReales.length > 0) {
+        container.innerHTML = mesesReales.map(m => {
+          const ok = m.estado && m.estado.includes('ahorrado') && !m.estado.includes('ahorrando');
+          return `<div class="row">
+            <div class="row-label">Mes ${m.mes}</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="row-value ${ok?'green':'amber'}">${fmtE(m.monto)}</div>
+              <span style="font-size:11px;padding:2px 8px;border-radius:6px;font-family:var(--mono);background:${ok?'var(--green-dim)':'var(--amber-dim)'};color:${ok?'var(--green)':'var(--amber)'}">
+                ${ok?'✅ ahorrado':'⏳ ahorrando'}
+              </span>
+            </div>
+          </div>`;
+        }).join('');
+      }
     }
   } catch(e) { console.log('Wohnung error:', e); }
 }
 
+// ═══ SPARPLAN REAL ═══
 async function loadSparplanReal() {
   try {
     const d = await fetchGAS('getSparplanReal');
     if (!d || d.error) return;
-    setEl('sp-mes-real',   d.mesReal || '—');
+    setEl('sp-mes-real',   d.mesReal   || '—');
     setEl('sp-saldo-real', d.saldoReal > 0 ? fmtE(d.saldoReal, 2) : '—');
   } catch(e) { console.log('Sparplan real error:', e); }
 }
 
+// ═══ SYNC ALL ═══
 async function syncAll() {
   const btn=document.getElementById('sync-btn');
   btn.textContent='↻ Sync...'; btn.className='sync-btn syncing';
