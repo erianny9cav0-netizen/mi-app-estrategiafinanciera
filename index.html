@@ -208,7 +208,10 @@ body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-fam
             <div class="prog-header"><span class="prog-label">Deuda Ramón</span><span class="prog-nums" id="prog-ramon-txt">— / 8.029$</span></div>
             <div class="prog-bar"><div class="prog-fill" id="prog-ramon" style="width:0%;background:var(--amber)"></div></div>
           </div>
-
+          <div class="prog-wrap">
+            <div class="prog-header"><span class="prog-label">Sparplan VWCE <span class="badge badge-blue" style="font-size:10px">live</span></span><span class="prog-nums" id="prog-sp-txt">— invertido</span></div>
+            <div class="prog-bar"><div class="prog-fill" id="prog-sp" style="width:0%;background:var(--purple)"></div></div>
+          </div>
         </div>
         <div class="card">
           <div class="card-title">Distribución ingreso neto</div>
@@ -335,7 +338,7 @@ body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-fam
         <div class="kpi blue"><div class="k-label">Tu Warmmiete</div><div class="k-value">465€</div><div class="k-sub">50% · Löbtau/Plauen</div></div>
         <div class="kpi amber"><div class="k-label">Meta entrada</div><div class="k-value">2.300€</div><div class="k-sub">Kaution + mudanza</div></div>
         <div class="kpi green"><div class="k-label">Ahorro acum.</div><div class="k-value" id="woh-acum">—</div><div class="k-sub">Wise Jar</div></div>
-        <div class="kpi"><div class="k-label">Plazo</div><div class="k-value">Oct 26</div><div class="k-sub">7 meses</div></div>
+        <div class="kpi"><div class="k-label">Plazo</div><div class="k-value">Oct 26</div><div class="k-sub">¡casi meta!</div></div>
       </div>
       <div class="card">
         <div class="card-title">Progreso ahorro</div>
@@ -405,6 +408,7 @@ body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-fam
       <div class="card">
         <div class="card-title">3-Zimmer · Löbtau/Plauen (tu 50%)</div>
         <div class="row"><div class="row-label">Meta total</div><div class="row-value">2.300€</div></div>
+        <div class="row"><div class="row-label">Acumulado real <span class="badge badge-blue" style="font-size:10px">live</span></div><div class="row-value green" id="woh-acum-metas">—</div></div>
         <div class="row"><div class="row-label">Aportación mensual</div><div class="row-value blue">357€ (minijob)</div></div>
         <div class="row"><div class="row-label">Dónde</div><div class="row-value">Wise Jar</div></div>
         <div class="row"><div class="row-label">Tu warmmiete después</div><div class="row-value">~465€/mes</div></div>
@@ -441,6 +445,15 @@ body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-fam
       </div>
 
 
+      <div class="section-label">Sparplan</div>
+      <div class="card">
+        <div class="card-title">Sparplan VWCE <span class="badge badge-blue" style="font-size:10px">live</span></div>
+        <div class="row"><div class="row-label">Último mes registrado</div><div class="row-value blue" id="sp-mes-real-metas">—</div></div>
+        <div class="row"><div class="row-label">Saldo transferido acumulado</div><div class="row-value green" id="sp-saldo-real-metas">—</div></div>
+        <div class="row"><div class="row-label">Aportación actual</div><div class="row-value amber">50€/mes ⚡ temporal</div></div>
+        <div class="row"><div class="row-label">Meta Oct 2026+</div><div class="row-value purple">460-500€/mes</div></div>
+        <div class="row"><div class="row-label">ETF</div><div class="row-value" style="font-size:12px">VWCE · IE00B3RBWM25</div></div>
+      </div>
 
       <div class="section-label">Steuererklärung 2026</div>
       <div class="card">
@@ -700,7 +713,7 @@ async function loadGastos() {
 // ═══ LOAD FONDO DE ABUNDANCIA ═══
 async function loadFE() {
   try {
-    const fe = await fetchGAS('getFondoEmergencia');
+    const fe = await fetchGAS('getFondoAbundancia');
     if(fe.error) return;
     const saldo = fe.saldoReal||0;
     const pct   = Math.min(saldo/META_FE,1)*100;
@@ -716,7 +729,7 @@ async function loadFE() {
     show2('fe-live-badge',true);
     // Cuentas
     setEl('cuentas-fe', fmtE(saldo,2)+' / '+fmtE(META_FE));
-  } catch(e) { /* silent fail */ }
+  } catch(e) { console.log('FE error:', e); }
 }
 
 // ═══ LOAD RAMÓN ═══
@@ -856,12 +869,13 @@ async function loadHistorial() {
 async function loadWohnung() {
   try {
     const w = await fetchGAS('estrategia');
-    if (!w || w.wohnungAcum === undefined) return;
+    if (!w) return;
     const acum = w.wohnungAcum || 0;
     const meta = 2300;
     const pct  = Math.min(acum / meta, 1) * 100;
-    // KPI
+    // KPI Wohnung tab
     setEl('woh-acum', fmtE(acum));
+    setEl('woh-acum-metas', fmtE(acum));
     // Resumen barra
     setEl('prog-woh-txt', fmtE(acum) + ' / ' + fmtE(meta));
     setW('prog-woh', pct);
@@ -871,11 +885,12 @@ async function loadWohnung() {
     setEl('woh-restante', fmtE(Math.max(meta - acum, 0)));
     // Historial dinámico
     const container = document.getElementById('woh-historial');
-    if (container && w.wohnungMeses && w.wohnungMeses.length > 0) {
-      const mesesReales = w.wohnungMeses.filter(m => m.monto > 0);
+    if (container) {
+      const meses = w.wohnungMeses || [];
+      const mesesReales = meses.filter(m => m.monto > 0);
       if (mesesReales.length > 0) {
         container.innerHTML = mesesReales.map(m => {
-          const ok = m.estado && m.estado.includes('ahorrado') && !m.estado.includes('ahorrando');
+          const ok = m.estado && !m.estado.includes('ahorrando') && m.estado !== '';
           return `<div class="row">
             <div class="row-label">Mes ${m.mes}</div>
             <div style="display:flex;align-items:center;gap:8px">
@@ -886,7 +901,20 @@ async function loadWohnung() {
             </div>
           </div>`;
         }).join('');
+      } else {
+        container.innerHTML = '<div style="color:var(--text3);font-size:13px;text-align:center;padding:12px">Sin datos aún</div>';
       }
+    }
+    // También actualiza Sparplan desde estrategia si viene en el mismo call
+    if (w.sparplanMes && w.sparplanSaldo > 0) {
+      const saldo = fmtE(w.sparplanSaldo, 2);
+      setEl('sp-mes-real',        w.sparplanMes);
+      setEl('sp-saldo-real',      saldo);
+      setEl('sp-mes-real-metas',  w.sparplanMes);
+      setEl('sp-saldo-real-metas',saldo);
+      const pctSP = Math.min(w.sparplanSaldo / 5000, 1) * 100;
+      setEl('prog-sp-txt', saldo + ' invertido');
+      setW('prog-sp', pctSP);
     }
   } catch(e) { console.log('Wohnung error:', e); }
 }
@@ -896,8 +924,20 @@ async function loadSparplanReal() {
   try {
     const d = await fetchGAS('getSparplanReal');
     if (!d || d.error) return;
-    setEl('sp-mes-real',   d.mesReal   || '—');
-    setEl('sp-saldo-real', d.saldoReal > 0 ? fmtE(d.saldoReal, 2) : '—');
+    const mes    = d.mesReal   || '—';
+    const saldo  = d.saldoReal > 0 ? fmtE(d.saldoReal, 2) : '—';
+    const saldoN = d.saldoReal || 0;
+    // Sparplan tab
+    setEl('sp-mes-real',   mes);
+    setEl('sp-saldo-real', saldo);
+    // Metas tab
+    setEl('sp-mes-real-metas',   mes);
+    setEl('sp-saldo-real-metas', saldo);
+    // Resumen - barra de progreso (meta referencial 5000€ = 1 año a 500€)
+    const metaSP = 5000;
+    const pctSP  = Math.min(saldoN / metaSP, 1) * 100;
+    setEl('prog-sp-txt', saldo + ' invertido');
+    setW('prog-sp', pctSP);
   } catch(e) { console.log('Sparplan real error:', e); }
 }
 
